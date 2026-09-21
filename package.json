@@ -1,0 +1,25 @@
+{
+  "name": "duarte-fernandez-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @duarte/web",
+    "dev:studio": "npm run dev --workspace @duarte/studio",
+    "build": "npm run build --workspace @duarte/content && npm run build --workspace @duarte/web",
+    "build:all": "npm run build --workspaces --if-present",
+    "check": "npm run typecheck --workspaces --if-present && npm run test --workspaces --if-present",
+    "test:e2e": "node apps/web/e2e/visual-smoke.mjs",
+    "test:chat": "python scripts/run_chat_tests.py"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}
