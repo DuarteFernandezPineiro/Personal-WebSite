@@ -23,16 +23,18 @@ export function requestLocaleTransition(detail: LocaleTransitionDetail) {
 }
 
 // Demo 1 of Codrops' PixelTransition uses an 8 × 14 overlay, 0.4 s cells and
-// a 0.03 s row/random stagger. Keeping those values makes the route swap land
-// at the same fully-covered moment without adding GSAP beside Motion.
+// a 0.03 s row/random stagger. Navigation starts just before the overlay is
+// fully covered so the destination is ready when the reveal begins.
 const pixelRows = 8;
 const pixelColumns = 14;
 const pixelCount = pixelRows * pixelColumns;
 const cellDuration = 0.4;
 const staggerStep = 0.03;
 const maximumStagger = staggerStep * ((pixelRows - 1) + 5);
-const navigationMoment = (cellDuration + maximumStagger) * 1_000;
-const transitionDuration = navigationMoment * 2;
+const fullyCoveredMoment = (cellDuration + maximumStagger) * 1_000;
+const navigationLead = 120;
+const navigationMoment = fullyCoveredMoment - navigationLead;
+const transitionDuration = fullyCoveredMoment * 2;
 const coverEase = (progress: number) => progress < 0.5
   ? Math.pow(progress * 2, 4) / 2
   : 1 - Math.pow((1 - progress) * 2, 4) / 2;
@@ -55,13 +57,16 @@ export function RouteDepthTransition() {
   const savedScroll = useRef(0);
   const activeRef = useRef(false);
   const navigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const finishTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState<ActiveTransition | null>(null);
 
   const clearTimers = useCallback(() => {
     if (navigationTimer.current) clearTimeout(navigationTimer.current);
+    if (revealTimer.current) clearTimeout(revealTimer.current);
     if (finishTimer.current) clearTimeout(finishTimer.current);
     navigationTimer.current = null;
+    revealTimer.current = null;
     finishTimer.current = null;
   }, []);
 
@@ -88,9 +93,11 @@ export function RouteDepthTransition() {
 
     setActive({ ...detail, phase: "covering" });
     navigationTimer.current = setTimeout(() => {
-      setActive((current) => current ? { ...current, phase: "revealing" } : null);
       router.push(detail.href, { scroll: false });
     }, navigationMoment);
+    revealTimer.current = setTimeout(() => {
+      setActive((current) => current ? { ...current, phase: "revealing" } : null);
+    }, fullyCoveredMoment);
     finishTimer.current = setTimeout(finish, transitionDuration);
   }, [finish, reduceMotion, router]);
 

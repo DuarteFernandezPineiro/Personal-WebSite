@@ -155,6 +155,24 @@ class WebChatAppTests(unittest.TestCase):
         )
         self.assertNotIn("OPENAI", response.text)
 
+    def test_api_rechaza_acceso_directo_si_el_proxy_privado_esta_configurado(self):
+        with (
+            patch.object(web_chat_app, "CLIENT", object()),
+            patch.object(web_chat_app, "CHAT_PROXY_SECRET", "proxy-secret-test"),
+            TestClient(web_chat_app.app, base_url="http://localhost") as client,
+        ):
+            response = client.post(
+                "/api/chat",
+                json={
+                    "message": "Pregunta",
+                    "detailLevel": "breve",
+                    "resetConversation": True,
+                },
+            )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertNotIn("proxy-secret-test", response.text)
+
     def test_cliente_activa_la_configuracion_de_analitica_al_cargar(self):
         app_script = (Path(web_chat_app.WEB_ROOT) / "app.js").read_text(encoding="utf-8")
         self.assertIn("void configureAnalytics();", app_script)

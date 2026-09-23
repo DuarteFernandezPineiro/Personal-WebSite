@@ -111,6 +111,7 @@ Values below are names and code defaults only. Local `.env` files are sensitive 
 | `NEXT_PUBLIC_SITE_URL` | No | Canonical public URL; defaults to `http://localhost:3000` |
 | `CHAT_API_URL` | For integrated chat | Server-only FastAPI origin; preferred over the public-prefixed fallback |
 | `NEXT_PUBLIC_CHAT_API_URL` | No | Legacy fallback for chat origin; defaults to localhost |
+| `CHAT_PROXY_SECRET` | Production chat | Long random server-only value; set the identical value in Vercel and FastAPI |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | No | Enables public Sanity reads and testimonial storage setup |
 | `NEXT_PUBLIC_SANITY_DATASET` | No | Defaults to `production` |
 | `SANITY_API_WRITE_TOKEN` | For testimonial submission | Server-only Sanity mutation token |
@@ -144,6 +145,7 @@ Values below are names and code defaults only. Local `.env` files are sensitive 
 | `OPENAI_GENERATION_ATTEMPTS` | No | Incomplete-response attempts; default 2 |
 | `CHAT_ALLOWED_ORIGINS` | Production | Explicit CORS/browser origins; local origins default in development |
 | `CHAT_ALLOWED_HOSTS` | Production | Trusted hosts; local hosts default in development |
+| `CHAT_PROXY_SECRET` | Production | Authenticates the Next proxy; must match Vercel and is never exposed to the browser |
 | `CHAT_COOKIE_SECURE` | Production | Default `false`; enable behind HTTPS |
 | `CHAT_ENABLE_HSTS` | No | Default `false` |
 | `CHAT_PUBLIC_ORIGIN` | No | Public service origin used by proxy-safety checks |
@@ -154,7 +156,7 @@ Values below are names and code defaults only. Local `.env` files are sensitive 
 | `CHAT_SESSION_TTL_SECONDS` | No | Default 3600 |
 | `CHAT_MAX_SESSIONS` | No | Default 500 |
 | `CHAT_MAX_TRACKED_CLIENTS` | No | Default 2000 |
-| `CHAT_MAX_MONTHLY_REQUESTS` | No | Code default 0 (unlimited); `.env.example` opts into 1000 |
+| `CHAT_MAX_MONTHLY_REQUESTS` | No | In-process monthly request fuse; code default 1000 |
 | `CHAT_CONTENT_TTL_SECONDS` | No | Repository TTL; default 300, applied during catalog construction |
 | `SANITY_PROJECT_ID` | No | Enables public chatSource reads |
 | `SANITY_DATASET` | No | Defaults to `production` |
@@ -168,10 +170,10 @@ Values below are names and code defaults only. Local `.env` files are sensitive 
 
 Use two deployments:
 
-1. Deploy `apps/web` to Vercel as the Next.js project. Keep monorepo source outside the app root available so the build can resolve `packages/content` and `packages/ui`. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin and `CHAT_API_URL` to the public FastAPI origin.
-2. Deploy `services/chat-api` from its Dockerfile to a container host. Keep one worker because sessions, rate limits, queue state and the monthly budget are process-local. Configure the final web origin in `CHAT_ALLOWED_ORIGINS`, the service hostname in `CHAT_ALLOWED_HOSTS`, and set `CHAT_COOKIE_SECURE=true` behind HTTPS.
+1. Deploy `apps/web` to Vercel as the Next.js project. Keep monorepo source outside the app root available so the build can resolve `packages/content` and `packages/ui`. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin, `CHAT_API_URL` to the public FastAPI origin and a long random `CHAT_PROXY_SECRET`.
+2. Deploy `services/chat-api` from its Dockerfile to a container host. Keep one worker because sessions, rate limits, queue state and the monthly budget are process-local. Configure the final web origin in `CHAT_ALLOWED_ORIGINS`, the service hostname in `CHAT_ALLOWED_HOSTS`, the same `CHAT_PROXY_SECRET`, and set `CHAT_COOKIE_SECURE=true` behind HTTPS.
 
-`OPENAI_API_KEY` belongs only in the chat service provider's encrypted environment-variable settings. Never put it in Vercel's `NEXT_PUBLIC_*` variables, browser code, HTML, Sanity, or a committed `.env` file. The browser calls the same-origin Next `/api/chat` route; the Next server proxies to FastAPI, and only FastAPI reads the OpenAI key.
+`OPENAI_API_KEY` belongs only in the chat service provider's encrypted environment-variable settings. Never put it in Vercel's `NEXT_PUBLIC_*` variables, browser code, HTML, Sanity, or a committed `.env` file. The browser calls the same-origin Next `/api/chat` route; the Next server authenticates to FastAPI with `CHAT_PROXY_SECRET`, and only FastAPI reads the OpenAI key.
 
 For messages and reviews, configure `RESEND_API_KEY` and a verified `CONTACT_FROM_EMAIL` on the Vercel web project. The recipient is deliberately not configurable: both contact mail and testimonial alerts use `profile.email`, currently `dfernandezpineiro@gmail.com`. Configure `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET` and the server-only `SANITY_API_WRITE_TOKEN`; submissions are stored as pending, reviewed in Sanity Studio and become visible on both Home and About after approval and cache refresh.
 

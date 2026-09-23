@@ -25,8 +25,9 @@ describe("testimonial submission validation", () => {
     expect(testimonialSubmissionSchema.safeParse({ ...validSubmission, relationship: "other", otherRelationship: "" }).success).toBe(false);
   });
 
-  it("rejects short comments and honeypot submissions", () => {
-    expect(testimonialSubmissionSchema.safeParse({ ...validSubmission, comment: "Muy bien." }).success).toBe(false);
+  it("accepts short comments but rejects empty and honeypot submissions", () => {
+    expect(testimonialSubmissionSchema.safeParse({ ...validSubmission, comment: "Muy bien." }).success).toBe(true);
+    expect(testimonialSubmissionSchema.safeParse({ ...validSubmission, comment: "   " }).success).toBe(false);
     expect(testimonialSubmissionSchema.safeParse({ ...validSubmission, website: "spam.example" }).success).toBe(false);
   });
 });

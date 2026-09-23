@@ -123,8 +123,8 @@ export const projects: Project[] = [
       "The final quality of a RAG system does not depend on the LLM alone. Poor extraction, a table split without context or weak retrieval constrains everything downstream. Designing traceability from ingestion was as important as choosing the generative model."
     ),
     scope: l(
-      "TFG y prototipo funcional desarrollado sobre documentación corporativa real. No se presenta como un sistema RAG operando actualmente en producción.",
-      "Bachelor’s thesis and functional prototype developed with real corporate documentation. It is not presented as a RAG system currently operating in production."
+      "Proyecto final implementado como sistema real e integrado con el software de la empresa para el procesamiento de documentación corporativa",
+      "Final project implemented as a real system and integrated with the company’s software for corporate document processing."
     ),
     video: {
       youtubeId: "5Gklw2n4dSs",
@@ -249,8 +249,8 @@ export const projects: Project[] = [
       "The challenge was not displaying a label, but turning a probabilistic output into a responsible experience. The interface therefore separates experimental analysis from financial advice and states its limits explicitly."
     ),
     scope: l(
-      "Proyecto educativo experimental: analiza un mensaje en inglés relacionado con Bitcoin. No predice precios y no ofrece asesoramiento financiero.",
-      "Experimental educational project: it analyses one English Bitcoin-related message. It does not predict prices or provide financial advice."
+      "Proyecto experimental que analiza el sentimiento general a cerca de bitcoin, como asesoramiento para posibles inversiones",
+      "Experimental project that analyses general sentiment around Bitcoin as guidance for potential investments."
     ),
     technologies: ["Python", "Sentence Transformers", "LightGBM", "scikit-learn", "FastAPI"],
     metrics: [

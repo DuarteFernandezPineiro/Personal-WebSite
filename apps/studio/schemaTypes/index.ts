@@ -128,7 +128,7 @@ const testimonial = defineType({
     defineField({ name: "otherRelationship", title: "Other relationship", type: "string" }),
     defineField({ name: "displayName", title: "Public name", type: "string" }),
     defineField({ name: "anonymous", title: "Publish anonymously", type: "boolean", initialValue: false }),
-    defineField({ name: "comment", title: "Comment", type: "text", rows: 7, validation: (rule) => rule.required().min(30).max(1400) }),
+    defineField({ name: "comment", title: "Comment", type: "text", rows: 7, validation: (rule) => rule.required().max(1400) }),
     defineField({ name: "locale", title: "Submission language", type: "string", options: { list: ["es", "en"] }, validation: (rule) => rule.required() }),
     defineField({ name: "consentToPublish", title: "Consent to publish", type: "boolean", readOnly: true }),
     defineField({ name: "submittedAt", title: "Submitted at", type: "datetime", readOnly: true }),

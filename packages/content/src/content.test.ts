@@ -47,4 +47,17 @@ describe("public content", () => {
     }
     expect(credentials.find((credential) => credential.id === "microsoft-foundry-chat-app")?.credentialId).toBe("E0A6793EE57A22FF");
   });
+
+  it("keeps the requested RAG and Bitcoin scope copy in both locales", () => {
+    const rag = projects.find((project) => project.slug === "rag-hibrido-documentacion");
+    const bitcoin = projects.find((project) => project.slug === "bitcoin-sentiment");
+    expect(rag?.scope).toEqual({
+      es: "Proyecto final implementado como sistema real e integrado con el software de la empresa para el procesamiento de documentación corporativa",
+      en: "Final project implemented as a real system and integrated with the company’s software for corporate document processing."
+    });
+    expect(bitcoin?.scope).toEqual({
+      es: "Proyecto experimental que analiza el sentimiento general a cerca de bitcoin, como asesoramiento para posibles inversiones",
+      en: "Experimental project that analyses general sentiment around Bitcoin as guidance for potential investments."
+    });
+  });
 });

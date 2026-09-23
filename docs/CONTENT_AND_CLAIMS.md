@@ -19,9 +19,9 @@ Do not invent metrics, production usage, team ownership or client outcomes. Say 
 
 ## Featured evidence
 
-- Hybrid RAG: 109 processed outputs, 2,913 indexed chunks and 57 documented tests. Academic TFG/prototype, not claimed as a production RAG service.
+- Hybrid RAG: 109 processed outputs, 2,913 indexed chunks and 57 documented tests. The owner states that the final project was implemented as a real system integrated with the company's document-processing software; do not identify the company or expose its documentation.
 - TwinPhoto: Windows desktop product for reviewing visually similar images; no public downloadable release is claimed yet.
-- Bitcoin Decision Chat: two-stage LightGBM ensembles over sentence embeddings, FastAPI, local explanation fallback and public Cloud Run demo. Experimental, English-only and not financial advice.
+- Bitcoin Decision Chat: two-stage LightGBM ensembles over sentence embeddings, FastAPI, local explanation fallback and public Cloud Run demo. Experimental and English-only; the portfolio frames its sentiment analysis as guidance for possible investments, without claiming price prediction.
 - Professional assistant: FastAPI, controlled Markdown retrieval, NDJSON streaming, server sessions, queue, limits, privacy sanitisation and Docker deployment. The integrated service currently has 37 tests, one of which is a live optional test.
 
 ## Media

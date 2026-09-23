@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import logging
 import os
@@ -50,11 +51,12 @@ MAX_REQUESTS_PER_MINUTE = int(os.getenv("CHAT_MAX_REQUESTS_PER_MINUTE", "12"))
 SESSION_TTL_SECONDS = int(os.getenv("CHAT_SESSION_TTL_SECONDS", "3600"))
 MAX_SESSIONS = int(os.getenv("CHAT_MAX_SESSIONS", "500"))
 MAX_TRACKED_CLIENTS = int(os.getenv("CHAT_MAX_TRACKED_CLIENTS", "2000"))
-MAX_MONTHLY_REQUESTS = int(os.getenv("CHAT_MAX_MONTHLY_REQUESTS", "0"))
+MAX_MONTHLY_REQUESTS = int(os.getenv("CHAT_MAX_MONTHLY_REQUESTS", "1000"))
 SESSION_COOKIE = "duarte_chat_session"
 COOKIE_SECURE = os.getenv("CHAT_COOKIE_SECURE", "false").lower() == "true"
 ENABLE_HSTS = os.getenv("CHAT_ENABLE_HSTS", "false").lower() == "true"
 PUBLIC_ORIGIN = os.getenv("CHAT_PUBLIC_ORIGIN", "").rstrip("/")
+CHAT_PROXY_SECRET = os.getenv("CHAT_PROXY_SECRET", "").strip()
 POSTHOG_PUBLIC_KEY = os.getenv("POSTHOG_PUBLIC_KEY", "").strip()
 POSTHOG_HOST = os.getenv("POSTHOG_HOST", "https://eu.i.posthog.com").strip().rstrip("/")
 POSTHOG_ALLOWED_HOSTS = frozenset({"https://eu.i.posthog.com", "https://us.i.posthog.com"})
@@ -492,7 +494,7 @@ app.add_middleware(
     allow_origins=allowed_origins(),
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type"],
+    allow_headers=["Content-Type", "X-Chat-Client-IP", "X-Chat-Proxy-Secret"],
 )
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts())
 app.add_middleware(RequestSizeLimitMiddleware)
@@ -500,10 +502,22 @@ app.add_middleware(SecurityHeadersMiddleware)
 
 
 def client_ip(request: Request) -> str:
-    forwarded_for = request.headers.get("x-forwarded-for", "")
-    if forwarded_for:
-        return forwarded_for.split(",", 1)[0].strip()
+    if CHAT_PROXY_SECRET:
+        forwarded = request.headers.get("x-chat-client-ip", "").strip()
+        try:
+            return str(ipaddress.ip_address(forwarded))
+        except ValueError:
+            return "unknown"
     return request.client.host if request.client else "unknown"
+
+
+def enforce_proxy_auth(request: Request) -> None:
+    """Requires the private Next-to-FastAPI credential when it is configured."""
+    if not CHAT_PROXY_SECRET:
+        return
+    supplied = request.headers.get("x-chat-proxy-secret", "")
+    if not supplied or not secrets.compare_digest(supplied, CHAT_PROXY_SECRET):
+        raise HTTPException(403, "Acceso al servicio no permitido.")
 
 
 def enforce_origin(request: Request) -> None:
@@ -627,6 +641,7 @@ def public_config() -> dict[str, object]:
 def api_chat(request: Request, payload: ChatPayload) -> StreamingResponse:
     if CLIENT is None:
         raise HTTPException(503, "El servicio no está configurado.")
+    enforce_proxy_auth(request)
     enforce_origin(request)
     question = payload.message.strip()
     if not question:
@@ -635,12 +650,13 @@ def api_chat(request: Request, payload: ChatPayload) -> StreamingResponse:
         detail_level = chat_core.normalizar_nivel_detalle(payload.detailLevel)
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
-    if not MONTHLY_BUDGET.consume():
-        raise HTTPException(503, "El asistente ha alcanzado su límite mensual. Puedes contactar con Duarte directamente.")
     ip_address = client_ip(request)
     request_id = getattr(request.state, "request_id", secrets.token_hex(8))
     session_id, _ = SESSIONS.get_or_create(request.cookies.get(SESSION_COOKIE))
     ticket = GATE.reserve(ip_address)
+    if not MONTHLY_BUDGET.consume():
+        GATE.release(ticket)
+        raise HTTPException(503, "El asistente ha alcanzado su límite mensual. Puedes contactar con Duarte directamente.")
 
     def event_stream() -> Iterator[bytes]:
         completed = False

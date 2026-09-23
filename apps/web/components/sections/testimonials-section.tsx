@@ -63,7 +63,7 @@ export function TestimonialsSection({ locale, testimonials }: { locale: Locale; 
       <div className="testimonials-intro">
         <Eyebrow>{isEs ? "Opiniones" : "Testimonials"}</Eyebrow>
         <h2 id="testimonials-title">{isEs ? "La experiencia de trabajar y aprender conmigo." : "What it is like to work and learn with me."}</h2>
-        <p>{isEs ? "Este espacio recogerá testimonios reales de personas que han compartido conmigo trabajo, estudios o docencia. Todas las opiniones se revisan antes de hacerse públicas." : "This space collects genuine testimonials from people who have worked, studied or taught with me. Every comment is reviewed before publication."}</p>
+        <p>{isEs ? "Este espacio recogerá testimonios reales de personas que han compartido conmigo trabajo, estudios o docencia. Deja aquí tu opinión a cerca de Duarte." : "This space collects genuine testimonials from people who have worked, studied or taught with me. Leave your testimonial about Duarte here."}</p>
       </div>
 
       {testimonials.length ? (
@@ -116,7 +116,7 @@ export function TestimonialsSection({ locale, testimonials }: { locale: Locale; 
         </div>
         <label>
           <span>{isEs ? "Tu opinión" : "Your testimonial"}</span>
-          <textarea name="comment" minLength={30} maxLength={1400} rows={6} required placeholder={isEs ? "¿Cómo fue trabajar, estudiar o colaborar con Duarte?" : "What was it like to work, study or collaborate with Duarte?"} />
+          <textarea name="comment" maxLength={1400} rows={6} required placeholder={isEs ? "¿Cómo fue trabajar, estudiar o colaborar con Duarte?" : "What was it like to work, study or collaborate with Duarte?"} />
         </label>
         <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
         <label className="consent-row">

@@ -894,11 +894,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .persistent-sound-control {
   position: fixed;
-  right: max(11rem, calc((100vw - var(--page-max)) / 2 + 11rem));
+  right: max(1rem, calc((100vw - var(--page-max)) / 2 + 1rem));
   bottom: 1rem;
   z-index: 121;
 }
-.utility-dock { right: max(1rem, calc((100vw - var(--page-max)) / 2 + 1rem)); }
+.utility-dock { right: max(12.75rem, calc((100vw - var(--page-max)) / 2 + 12.75rem)); }
 
 .credentials-section { border-top: 1px solid var(--line); }
 .credential-grid {
@@ -971,14 +971,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 @media (max-width: 780px) {
-  .persistent-sound-control { right: 10.7rem; }
+  .persistent-sound-control { right: 1rem; }
+  .utility-dock { right: 10.7rem; }
   .credential-card { min-height: 22rem; padding: 1.6rem; }
   .credential-meta > div { grid-template-columns: 1fr; gap: .35rem; }
   .about-credentials { padding-block: 6.5rem; }
 }
 
 @media (max-width: 430px) {
-  .persistent-sound-control { right: 9.55rem; }
+  .persistent-sound-control { right: 1rem; }
+  .utility-dock { right: 4.9rem; }
   .sound-label { display: none; }
   .sound-button { width: 3.25rem; min-width: 3.25rem; padding: 0; }
 }
@@ -1919,7 +1921,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .privacy-updated { padding: 1.5rem var(--pad); background: var(--paper); }
 .privacy-updated p { margin: 0; color: #5b6c6a; font: .62rem/1.5 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
 
-.persistent-sound-control { right: max(12.75rem, calc((100vw - var(--page-max)) / 2 + 12.75rem)); }
+.persistent-sound-control { right: max(1rem, calc((100vw - var(--page-max)) / 2 + 1rem)); }
+.utility-dock { right: max(12.75rem, calc((100vw - var(--page-max)) / 2 + 12.75rem)); }
 
 @media (max-width: 1000px) {
   .testimonials-intro,
@@ -1942,7 +1945,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .profile-portrait { width: 100%; }
   .privacy-card { padding-block: 2.5rem; grid-template-columns: 1fr; gap: 1rem; }
   .privacy-card p { grid-column: 1; }
-  .persistent-sound-control { right: 10.2rem; }
+  .persistent-sound-control { right: 1rem; }
+  .utility-dock { right: 10.2rem; }
 }
 
 /* Shared profile testimony, locale-aware CV actions and supplied music controls. */

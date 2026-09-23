@@ -91,13 +91,13 @@ Browser persistence is intentionally small:
 - the three-part audio playlist is enabled by default at a moderated volume; browser autoplay policy may defer audible playback until the first interaction;
 - chat conversation history is not stored in the browser.
 
-FastAPI keeps conversation sessions, rate limits, queue tickets, concurrency limits and the optional monthly budget in process memory. The session cookie is opaque, HttpOnly and SameSite Lax; Secure is configurable. This state is neither durable nor shared across replicas. The Docker command therefore runs one Uvicorn worker.
+FastAPI keeps conversation sessions, rate limits, queue tickets, concurrency limits and the monthly request budget in process memory. The session cookie is opaque, HttpOnly and SameSite Lax; Secure is configurable. This state is neither durable nor shared across replicas. The Docker command therefore runs one Uvicorn worker.
 
 ## Server APIs and external services
 
 ### Chat
 
-The drawer posts `{ message, detailLevel, resetConversation }` to Next. The proxy forwards the request body, origin, session cookie and cancellation signal to FastAPI, then relays the upstream body and cookie.
+The drawer posts `{ message, detailLevel, resetConversation }` to Next. The proxy forwards the request body, origin, session cookie, a validated Vercel client IP and cancellation signal to FastAPI, then relays the upstream body and cookie. In production, both services share a server-only `CHAT_PROXY_SECRET`; FastAPI rejects direct chat calls that do not carry it.
 
 After streaming starts, FastAPI emits newline-delimited events: `queued`, `status`, zero or more `delta`, `metrics`, then `done`, or a streamed `error`. Validation, origin, rate-limit, budget and missing-provider failures that happen before `StreamingResponse` exists use normal FastAPI JSON errors.
 
