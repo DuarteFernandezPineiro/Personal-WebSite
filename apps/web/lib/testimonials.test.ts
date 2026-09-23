@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { testimonialSubmissionSchema } from "./testimonials";
+import { approvedTestimonialsQuery, testimonialSubmissionSchema } from "./testimonials";
 
 const validSubmission = {
   relationship: "coworker" as const,
@@ -13,6 +13,12 @@ const validSubmission = {
 };
 
 describe("testimonial submission validation", () => {
+  it("only reads approved testimonials with publication consent", () => {
+    expect(approvedTestimonialsQuery).toContain('status == "approved"');
+    expect(approvedTestimonialsQuery).toContain("consentToPublish == true");
+    expect(approvedTestimonialsQuery).not.toContain("locale ==");
+  });
+
   it("accepts an identified professional testimonial", () => {
     expect(testimonialSubmissionSchema.safeParse(validSubmission).success).toBe(true);
   });

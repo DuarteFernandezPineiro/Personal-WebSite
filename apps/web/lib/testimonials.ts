@@ -42,7 +42,7 @@ export type SanityTestimonial = {
   submittedAt?: string;
 };
 
-export const approvedTestimonialsQuery = `*[_type == "testimonial" && status == "approved"] | order(submittedAt desc){_id,relationship,otherRelationship,displayName,anonymous,comment,submittedAt}`;
+export const approvedTestimonialsQuery = `*[_type == "testimonial" && status == "approved" && consentToPublish == true] | order(submittedAt desc){_id,relationship,otherRelationship,displayName,anonymous,comment,submittedAt}`;
 
 export function getTestimonialsSanityConfig() {
   const rawProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
