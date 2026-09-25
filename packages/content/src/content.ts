@@ -249,7 +249,7 @@ export const projects: Project[] = [
       "The challenge was not displaying a label, but turning a probabilistic output into a responsible experience. The interface therefore separates experimental analysis from financial advice and states its limits explicitly."
     ),
     scope: l(
-      "Proyecto experimental que analiza el sentimiento general a cerca de bitcoin, como asesoramiento para posibles inversiones",
+      "Proyecto experimental que analiza el sentimiento general acerca de bitcoin, como asesoramiento para posibles inversiones",
       "Experimental project that analyses general sentiment around Bitcoin as guidance for potential investments."
     ),
     technologies: ["Python", "Sentence Transformers", "LightGBM", "scikit-learn", "FastAPI"],
