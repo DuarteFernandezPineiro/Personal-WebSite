@@ -127,7 +127,7 @@ try {
   const testimonialsIntroFrame = await page.locator(".testimonials-intro").boundingBox();
   const testimonialsFormFrame = await page.locator(".testimonial-form").boundingBox();
   assert(Boolean(testimonialsIntroFrame && testimonialsFormFrame && Math.abs(testimonialsIntroFrame.y - testimonialsFormFrame.y) <= 2), "The testimonial form does not start level with the section title");
-  assert(await page.getByText("Deja aquí tu opinión a cerca de Duarte.", { exact: false }).isVisible(), "The requested testimonial invitation is missing");
+  assert(await page.getByText("Deja aquí tu opinión acerca de Duarte.", { exact: false }).isVisible(), "The requested testimonial invitation is missing");
   await page.locator(".testimonial-form select[name='relationship']").selectOption("other");
   await page.locator(".testimonial-form input[name='otherRelationship']").fill("Profesor de proyecto");
   await page.locator(".anonymous-row input").check();

@@ -63,7 +63,7 @@ export function TestimonialsSection({ locale, testimonials }: { locale: Locale; 
       <div className="testimonials-intro">
         <Eyebrow>{isEs ? "Opiniones" : "Testimonials"}</Eyebrow>
         <h2 id="testimonials-title">{isEs ? "La experiencia de trabajar y aprender conmigo." : "What it is like to work and learn with me."}</h2>
-        <p>{isEs ? "Este espacio recogerá testimonios reales de personas que han compartido conmigo trabajo, estudios o docencia. Deja aquí tu opinión a cerca de Duarte." : "This space collects genuine testimonials from people who have worked, studied or taught with me. Leave your testimonial about Duarte here."}</p>
+        <p>{isEs ? "Este espacio recogerá testimonios reales de personas que han compartido conmigo trabajo, estudios o docencia. Deja aquí tu opinión acerca de Duarte." : "This space collects genuine testimonials from people who have worked, studied or taught with me. Leave your testimonial about Duarte here."}</p>
       </div>
 
       {testimonials.length ? (
