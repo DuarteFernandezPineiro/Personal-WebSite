@@ -36,7 +36,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="about-hero-meta" aria-label={isEs ? "Resumen profesional" : "Professional summary"}>
           <span>{isEs ? "Graduado en Inteligencia Artificial" : "Artificial Intelligence graduate"}</span>
           <span>{isEs ? "ESEI · Universidade de Vigo" : "ESEI · University of Vigo"}</span>
-          <span>Santiago de Compostela</span>
+          <span>Noia, A Coruña</span>
         </div>
       </header>
 

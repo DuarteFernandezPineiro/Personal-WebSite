@@ -2,10 +2,13 @@ Informacion_documents:
   about_me:
     file: Informacion/Sobre_mi.md
     description: >
-      Presentación personal de Duarte Fernández Piñeiro, valores,
+      Presentación personal de Duarte Fernández Piñeiro, de Noia (A Coruña), valores,
       intereses, características personales y forma de trabajar.
     use_when:
       - presentación personal
+      - de dónde es Duarte
+      - origen y localidad
+      - Noia
       - fortalezas personales
       - valores
       - trabajo en equipo

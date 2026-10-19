@@ -19,6 +19,8 @@ tags:
 
 Soy Duarte Fernández Piñeiro y formo parte de la primera promoción de graduados en Inteligencia Artificial de la ESEI, Universidade de Vigo. Combino curiosidad técnica, aprendizaje continuo y compromiso con los proyectos que asumo. Me motiva comprender problemas complejos y convertir ese conocimiento en soluciones que otras personas puedan utilizar, evaluar y mantener.
 
+Soy de Noia, en la provincia de A Coruña, Galicia, España.
+
 Mi interés principal está en la inteligencia artificial aplicada: sistemas RAG, LLM, agentes, NLP y productos que conectan modelos con datos reales. Además de conseguir que una solución funcione, presto atención a la calidad de las respuestas, el consumo de tokens, la latencia, la trazabilidad y la experiencia de uso.
 
 Valoro especialmente la sinceridad, la comunicación directa y la responsabilidad. Soy sociable, positivo y resolutivo; me resulta fácil relacionarme con perfiles diferentes, hablar en público, leer el contexto de una conversación y construir relaciones de trabajo positivas.

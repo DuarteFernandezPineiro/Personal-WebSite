@@ -28,7 +28,7 @@ const personJsonLd = {
   name: profile.name,
   jobTitle: "Artificial Intelligence Engineer",
   email: `mailto:${profile.email}`,
-  address: { "@type": "PostalAddress", addressLocality: "Santiago de Compostela", addressRegion: "Galicia", addressCountry: "ES" },
+  address: { "@type": "PostalAddress", addressLocality: "Noia", addressRegion: "A Coruña", addressCountry: "ES" },
   sameAs: [profile.linkedin, profile.github],
   knowsAbout: ["Artificial Intelligence", "Retrieval-augmented generation", "Natural language processing", "Machine learning", "Python"]
 };

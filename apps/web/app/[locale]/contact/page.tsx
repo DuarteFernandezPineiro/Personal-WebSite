@@ -25,7 +25,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <p className="micro-label">{locale === "es" ? "Contacto directo" : "Direct contact"}</p>
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
           <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
-          <p><ProfessionalText text={locale === "es" ? "Santiago de Compostela · Disponible para remoto, híbrido y presencial." : "Santiago de Compostela · Available for remote, hybrid and on-site work."} locale={locale} phrases={locale === "es" ? ["Disponible para remoto, híbrido y presencial"] : ["Available for remote, hybrid and on-site work"]} /></p>
+          <p><ProfessionalText text={locale === "es" ? "Noia, A Coruña · Disponible para remoto, híbrido y presencial." : "Noia, A Coruña · Available for remote, hybrid and on-site work."} locale={locale} phrases={locale === "es" ? ["Disponible para remoto, híbrido y presencial"] : ["Available for remote, hybrid and on-site work"]} /></p>
           <Link href={`/${locale}/privacy`} prefetch={false}>{locale === "es" ? "Privacidad y datos" : "Privacy & data"}</Link>
         </aside>
         <ContactForm locale={locale} copy={dict.contact} />

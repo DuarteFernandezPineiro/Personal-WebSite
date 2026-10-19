@@ -56,7 +56,7 @@ describe("public content", () => {
       en: "Final project implemented as a real system and integrated with the company’s software for corporate document processing."
     });
     expect(bitcoin?.scope).toEqual({
-      es: "Proyecto experimental que analiza el sentimiento general a cerca de bitcoin, como asesoramiento para posibles inversiones",
+      es: "Proyecto experimental que analiza el sentimiento general acerca de bitcoin, como asesoramiento para posibles inversiones",
       en: "Experimental project that analyses general sentiment around Bitcoin as guidance for potential investments."
     });
   });

@@ -214,7 +214,7 @@ try {
   await page.goto(`${base}/es/contact`, { waitUntil: "domcontentloaded" });
   assert((await page.locator(".site-header").getByRole("link", { name: "Contacto", exact: true }).getAttribute("aria-current")) === "page", "Contact is not marked as the current navigation tab");
   assert((await page.locator(".contact-page.editorial-page").count()) === 1, "Contact does not use the shared editorial layout");
-  assert(await page.getByText("Santiago de Compostela · Disponible para remoto, híbrido y presencial.", { exact: true }).isVisible(), "The full work-mode availability is missing");
+  assert(await page.getByText("Noia, A Coruña · Disponible para remoto, híbrido y presencial.", { exact: true }).isVisible(), "The full work-mode availability is missing");
   await page.screenshot({ path: resolve(output, "contact-desktop.png"), fullPage: false });
   await page.getByLabel("Nombre").fill("Reclutadora Ejemplo");
   await page.getByLabel("Email").fill("recruiter@example.com");

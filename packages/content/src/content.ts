@@ -14,7 +14,7 @@ export const profile: SiteProfile = {
     "Formo parte de la primera promoción de graduados en Inteligencia Artificial de la ESEI. He trabajado con recuperación de información, NLP, visión artificial, modelos de machine learning, agentes y LLM, desde la experimentación hasta la API, la interfaz y el despliegue.",
     "I am part of ESEI’s first graduating class in Artificial Intelligence. I have worked with information retrieval, NLP, computer vision, machine-learning models, agents and LLMs, from experimentation through to the API, interface and deployment."
   ),
-  location: l("Santiago de Compostela · Galicia", "Santiago de Compostela · Galicia, Spain"),
+  location: l("Noia, A Coruña", "Noia, A Coruña, Spain"),
   availability: l("Disponible para nuevas oportunidades", "Open to new opportunities"),
   email: "dfernandezpineiro@gmail.com",
   linkedin: "https://www.linkedin.com/in/dfernandezpineiro",
