@@ -3,9 +3,19 @@
 import type { Locale } from "@duarte/content";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useHydrated } from "../ui/use-hydrated";
 
 type Consent = "essential" | "analytics";
 const STORAGE_KEY = "dfp-consent-v1";
+
+function readConsent(): Consent | null {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored === "essential" || stored === "analytics" ? stored : null;
+  } catch {
+    return null;
+  }
+}
 
 async function enableAnalytics() {
   const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -18,21 +28,27 @@ async function enableAnalytics() {
 }
 
 export function ConsentBanner({ locale }: { locale: Locale }) {
-  const [visible, setVisible] = useState(false);
+  const hydrated = useHydrated();
+  return hydrated ? <BrowserConsentBanner locale={locale} /> : null;
+}
+
+function BrowserConsentBanner({ locale }: { locale: Locale }) {
+  const [consent, setConsent] = useState(readConsent);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY) as Consent | null;
-    if (!stored) setVisible(true);
-    if (stored === "analytics") void enableAnalytics();
-  }, []);
+    if (consent === "analytics") void enableAnalytics().catch(() => {});
+  }, [consent]);
 
   function choose(value: Consent) {
-    window.localStorage.setItem(STORAGE_KEY, value);
-    if (value === "analytics") void enableAnalytics();
-    setVisible(false);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, value);
+    } catch {
+      // Browser storage can be disabled; still respect the choice for this mount.
+    }
+    setConsent(value);
   }
 
-  if (!visible) return null;
+  if (consent) return null;
   return (
     <aside className="consent-banner" aria-label={locale === "es" ? "Preferencias de privacidad" : "Privacy preferences"}>
       <div>

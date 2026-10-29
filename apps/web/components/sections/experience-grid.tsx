@@ -2,13 +2,13 @@
 
 import { translate, type Locale, type TimelineEntry } from "@duarte/content";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ProfessionalText } from "@/components/ui/professional-text";
+import { useHydrated } from "../ui/use-hydrated";
 
 export function ExperienceGrid({ entries, locale }: { entries: TimelineEntry[]; locale: Locale }) {
   const prefersReducedMotion = useReducedMotion();
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
+  const hydrated = useHydrated();
   const reduceMotion = hydrated && Boolean(prefersReducedMotion);
 
   return (

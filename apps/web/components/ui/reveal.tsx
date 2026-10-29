@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useState, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
+import { useHydrated } from "./use-hydrated";
 
 export type RevealProps = ComponentProps<typeof motion.div> & {
   delay?: number;
@@ -9,8 +10,7 @@ export type RevealProps = ComponentProps<typeof motion.div> & {
 
 export function Reveal({ children, delay = 0, ...props }: RevealProps) {
   const reduceMotion = useReducedMotion();
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
+  const hydrated = useHydrated();
   const disableMotion = hydrated && reduceMotion;
   return (
     <motion.div

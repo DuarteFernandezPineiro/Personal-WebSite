@@ -25,6 +25,7 @@ export function ChatDrawer({ locale, copy, triggerLabel }: { locale: Locale; cop
 
   useEffect(() => {
     if (!open) return;
+    const trigger = triggerRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     dialogRef.current?.querySelector<HTMLElement>("button, input, textarea, select")?.focus({ preventScroll: true });
@@ -46,7 +47,7 @@ export function ChatDrawer({ locale, copy, triggerLabel }: { locale: Locale; cop
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
-      triggerRef.current?.focus();
+      trigger?.focus();
     };
   }, [open]);
 

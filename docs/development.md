@@ -78,7 +78,7 @@ npm run lint --workspace @duarte/web
 - `check` runs typecheck in all four npm workspaces, then the Vitest suites in web and content.
 - `test:chat` uses `scripts/run_chat_tests.py` to discover the Python unittest suite with the correct import path.
 - The live OpenAI regression is skipped unless `RUN_LIVE_OPENAI_TESTS=1`; never enable it without explicit credentials and intent.
-- ESLint is not included in `check` or CI. At the onboarding baseline it reports four `react-hooks/set-state-in-effect` errors and three warnings. Documentation-only work must not claim lint is green; code work should run it and avoid adding new findings unless it explicitly fixes the baseline.
+- ESLint is not included in `check` or CI. The expected baseline is zero errors and warnings. Run it for TypeScript/React work. The Google Fonts stylesheet lives in the shared App Router root layout, with a documented local exception to the Pages Router-only custom-font warning.
 
 ## Browser smoke flow
 
@@ -188,4 +188,4 @@ Before launch, verify the sender domain in Resend, create a least-privilege Sani
 5. Run the browser smoke flow for visible work; verify both locales, mobile/desktop, keyboard, reduced motion and missing credentials.
 6. Confirm no secrets, private identifiers or unpublished CMS data appear in source, fixtures, logs or screenshots.
 
-At the current baseline, `check` passes 18 Vitest tests across web and content, the Next build produces 26 route outputs and the Python suite passes 36 tests with one live test skipped.
+At the current baseline, `check` passes 28 Vitest tests across web and content, the Next build produces 26 route outputs and the Python suite runs 38 tests (37 pass, one live test is skipped).
