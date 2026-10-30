@@ -188,4 +188,4 @@ Before launch, verify the sender domain in Resend, create a least-privilege Sani
 5. Run the browser smoke flow for visible work; verify both locales, mobile/desktop, keyboard, reduced motion and missing credentials.
 6. Confirm no secrets, private identifiers or unpublished CMS data appear in source, fixtures, logs or screenshots.
 
-At the current baseline, `check` passes 28 Vitest tests across web and content, the Next build produces 26 route outputs and the Python suite runs 38 tests (37 pass, one live test is skipped).
+At the current baseline, `check` passes 29 Vitest tests across web and content, the Next build produces 28 route outputs and the Python suite runs 39 tests (38 pass, one live test is skipped).

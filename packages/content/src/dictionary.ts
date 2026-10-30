@@ -12,7 +12,7 @@ export const dictionary = {
     sections: {
       proof: "Datos de los proyectos",
       projects: "Proyectos principales",
-      projectsLead: "Cuatro proyectos explicados con su contexto, tecnologías, decisiones y resultados.",
+      projectsLead: "Proyectos explicados con su contexto, tecnologías, decisiones y resultados.",
       trajectory: "Trayectoria",
       capabilities: "Cómo construyo",
       human: "Fuera del código",
@@ -21,7 +21,7 @@ export const dictionary = {
     },
     common: {
       viewCase: "Ver caso",
-      allProjects: "Ver los cuatro proyectos",
+      allProjects: "Ver todos los proyectos",
       live: "Disponible",
       menu: "Menú",
       close: "Cerrar",
@@ -71,7 +71,7 @@ export const dictionary = {
     sections: {
       proof: "Project figures",
       projects: "Main projects",
-      projectsLead: "Four projects explained through their context, technologies, decisions and outcomes.",
+      projectsLead: "Projects explained through their context, technologies, decisions and outcomes.",
       trajectory: "Trajectory",
       capabilities: "How I build",
       human: "Beyond the code",
@@ -80,7 +80,7 @@ export const dictionary = {
     },
     common: {
       viewCase: "View case",
-      allProjects: "View the four projects",
+      allProjects: "View all projects",
       live: "Available",
       menu: "Menu",
       close: "Close",

@@ -17,6 +17,16 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+async function assertAirfryerCase(page, locale) {
+  assert(await page.getByRole("heading", { level: 1, name: /Airfryer:/ }).isVisible(), `The ${locale} Airfryer case is missing`);
+  assert((await page.locator(".case-flow li").count()) === 6, `The ${locale} Airfryer pipeline is incomplete`);
+  assert((await page.locator(".case-fact-metrics dd").count()) === 3, `The ${locale} Airfryer module metrics are missing`);
+  const narrative = await page.locator(".case-article").textContent();
+  assert(narrative.includes(locale === "es" ? "siete cortes de pollo" : "seven chicken cuts"), `The ${locale} Airfryer scope is missing`);
+  assert(narrative.includes(locale === "es" ? "revisión humana" : "human review"), `The ${locale} Airfryer review requirement is missing`);
+  assert(!(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)), `The ${locale} Airfryer page has horizontal overflow`);
+}
+
 function unexpectedBrowserErrors(errors) {
   return errors.filter((message) => (
     !message.includes("503 (Service Unavailable)")
@@ -41,6 +51,8 @@ try {
   await page.reload({ waitUntil: "domcontentloaded" });
   assert((await page.locator(".consent-banner").count()) === 0, "Consent preference was not persisted");
   assert(await page.getByRole("heading", { level: 1 }).isVisible(), "Hero heading is not visible");
+  assert((await page.locator(".project-card").count()) === 5, "The home page must include all five projects");
+  assert((await page.locator(".project-card h3 a[href='/es/projects/airfryer-vision-cocinado']").count()) === 1, "Airfryer is missing from the home page");
   assert(await page.locator(".hero-role", { hasText: "Ingeniero de Inteligencia Artificial" }).isVisible(), "The AI Engineer role is not prominent in the hero");
   const roleDecoration = await page.locator(".hero-role").evaluate((element) => ({
     leadingContent: getComputedStyle(element, "::before").content,
@@ -200,7 +212,7 @@ try {
   assert((await page.locator(".archive-page.editorial-page").count()) === 1, "Projects do not use the shared editorial layout");
   assert((await page.locator(".archive-page > .page-hero").evaluate((element) => getComputedStyle(element).backgroundColor)) === "rgba(0, 0, 0, 0)", "Projects hero is not floating over the ambient field");
   const projectCount = await page.locator(".project-index-row").count();
-  assert(projectCount === 4, "The project page must contain exactly four main projects");
+  assert(projectCount === 5, "The project page must contain exactly five main projects");
   assert((await page.locator(".archive-filters").count()) === 0, "Project filters should not be present");
   await page.locator(".project-index-row").first().scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
@@ -258,6 +270,21 @@ try {
   await page.screenshot({ path: resolve(output, "case-study.png"), fullPage: false });
   await page.locator(".case-pagination").scrollIntoViewIfNeeded();
   await page.screenshot({ path: resolve(output, "case-pagination.png"), fullPage: false });
+
+  assert((await page.locator(".next-case").getAttribute("href")) === "/es/projects/airfryer-vision-cocinado", "Airfryer should follow RAG in project navigation");
+  await page.locator(".next-case").focus();
+  await page.keyboard.press("Enter");
+  await page.waitForURL(`${base}/es/projects/airfryer-vision-cocinado`);
+  await page.locator(".page-pixel-scene").waitFor({ state: "hidden", timeout: 6_000 });
+  await assertAirfryerCase(page, "es");
+  await page.screenshot({ path: resolve(output, "airfryer-desktop-es.png"), fullPage: false });
+  assert((await page.locator(".previous-case").getAttribute("href")) === "/es/projects/rag-hibrido-documentacion", "Airfryer previous-project navigation is incorrect");
+  assert((await page.locator(".next-case").getAttribute("href")) === "/es/projects/twinphoto", "Airfryer next-project navigation is incorrect");
+  await page.getByRole("link", { name: "EN", exact: true }).click();
+  await page.waitForURL(`${base}/en/projects/airfryer-vision-cocinado`);
+  await page.locator(".page-pixel-scene").waitFor({ state: "hidden", timeout: 6_000 });
+  await assertAirfryerCase(page, "en");
+  await page.screenshot({ path: resolve(output, "airfryer-desktop-en.png"), fullPage: false });
 
   await page.goto(`${base}/es/projects/twinphoto`, { waitUntil: "domcontentloaded" });
   assert((await page.locator(".previous-case").count()) === 1, "A middle project is missing its previous-project link");
@@ -409,6 +436,11 @@ try {
   await mobilePage.getByAltText(/Retrato profesional de Duarte/i).scrollIntoViewIfNeeded();
   await mobilePage.waitForTimeout(900);
   await mobilePage.screenshot({ path: resolve(output, "about-mobile-portrait.png"), fullPage: false });
+  for (const locale of ["es", "en"]) {
+    await mobilePage.goto(`${base}/${locale}/projects/airfryer-vision-cocinado`, { waitUntil: "domcontentloaded" });
+    await assertAirfryerCase(mobilePage, locale);
+    await mobilePage.screenshot({ path: resolve(output, `airfryer-mobile-${locale}.png`), fullPage: false });
+  }
   await mobile.close();
 
   const reduced = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: "reduce" });
@@ -420,6 +452,9 @@ try {
   if (await reducedPage.locator(".consent-banner").isVisible()) await reducedPage.getByRole("button", { name: /solo esenciales/i }).click();
   assert((await reducedPage.locator(".hero-visual").count()) === 0, "The removed hero visual is present in reduced-motion mode");
   await reducedPage.screenshot({ path: resolve(output, "home-reduced-motion.png"), fullPage: false });
+  await reducedPage.goto(`${base}/es/projects/airfryer-vision-cocinado`, { waitUntil: "domcontentloaded" });
+  await assertAirfryerCase(reducedPage, "es");
+  await reducedPage.screenshot({ path: resolve(output, "airfryer-reduced-motion.png"), fullPage: false });
   const unexpectedReducedErrors = unexpectedBrowserErrors(reducedErrors);
   assert(unexpectedReducedErrors.length === 0, `Reduced-motion browser errors: ${unexpectedReducedErrors.join(" | ")}`);
   await reduced.close();

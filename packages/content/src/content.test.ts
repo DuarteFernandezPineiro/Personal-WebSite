@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { about, credentials, isLocale, profile, projects, translate } from "./index";
 
 describe("public content", () => {
-  it("contains four featured case studies with unique slugs", () => {
+  it("contains five featured case studies with unique slugs", () => {
     const featured = projects.filter((project) => project.featured);
-    expect(featured).toHaveLength(4);
+    expect(featured).toHaveLength(5);
     expect(new Set(projects.map((project) => project.slug)).size).toBe(projects.length);
   });
 
@@ -14,8 +14,8 @@ describe("public content", () => {
     expect(serialized).not.toMatch(/07[\/-]11[\/-]2004/);
   });
 
-  it("keeps the four main projects detailed and auditable", () => {
-    expect(projects).toHaveLength(4);
+  it("keeps the main projects detailed and auditable in both languages", () => {
+    expect(projects).toHaveLength(5);
     for (const project of projects) {
       expect(project.summary.es.length).toBeGreaterThan(60);
       expect(project.problem.es.length).toBeGreaterThan(40);
@@ -27,7 +27,20 @@ describe("public content", () => {
       expect(project.architecture?.length).toBeGreaterThanOrEqual(4);
       expect(project.validation?.es.length).toBeGreaterThan(80);
       expect(project.scope?.es.length).toBeGreaterThan(40);
+      expect(project.summary.en.length).toBeGreaterThan(60);
+      expect(project.validation?.en.length).toBeGreaterThan(80);
+      expect(project.scope?.en.length).toBeGreaterThan(40);
     }
+  });
+
+  it("presents Airfryer as research with a defined recognition domain and human review", () => {
+    const airfryer = projects.find((project) => project.slug === "airfryer-vision-cocinado");
+    expect(airfryer?.status).toBe("research");
+    expect(airfryer?.scope?.es).toContain("siete cortes de pollo");
+    expect(airfryer?.scope?.en).toContain("seven chicken cuts");
+    expect(airfryer?.scope?.es).toContain("revisión humana");
+    expect(airfryer?.scope?.en).toContain("human review");
+    expect(airfryer?.metrics.find((metric) => metric.value === "91,71%")?.label.en).toContain("603 test images");
   });
 
   it("resolves locales and translated values", () => {

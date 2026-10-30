@@ -68,6 +68,7 @@ class ChatCoreTests(unittest.TestCase):
         self.assertIn("project_rag_empresarial_tfg", projects)
         self.assertIn("project_asistente_profesional_web", projects)
         self.assertIn("project_bitcoin_sentiment_decision_chat", projects)
+        self.assertIn("project_airfryer_vision_cocinado", projects)
         self.assertTrue(projects["project_asistente_profesional_web"]["featured"])
 
     def test_busqueda_general_respeta_prioridad_de_entrevista(self):
@@ -85,8 +86,8 @@ class ChatCoreTests(unittest.TestCase):
             [project["project_id"] for project in result["projects"]],
             [
                 "project_rag_empresarial_tfg",
+                "project_airfryer_vision_cocinado",
                 "project_asistente_profesional_web",
-                "project_bitcoin_sentiment_decision_chat",
             ],
         )
 
@@ -118,6 +119,20 @@ class ChatCoreTests(unittest.TestCase):
                 result["projects"][0]["project_id"],
                 "project_asistente_profesional_web",
             )
+
+    def test_airfryer_se_recupera_con_su_alcance_y_revision_humana(self):
+        projects = chat_core.cargar_indice_proyectos()
+        for query in ("Airfryer", "cocinado inteligente", "cooking vision"):
+            result = json.loads(chat_core.buscar_proyectos(query, 1, projects))
+            self.assertEqual(result["projects"][0]["project_id"], "project_airfryer_vision_cocinado")
+        result = json.loads(chat_core.leer_proyecto("project_airfryer_vision_cocinado", projects))
+        self.assertTrue(result["ok"])
+        project = result["project"]
+        self.assertEqual(project["status"], "functional_research_prototype")
+        limitations = " ".join(project["known_limitations"])
+        self.assertIn("siete cortes de pollo", limitations)
+        self.assertIn("revisión humana", limitations)
+        self.assertNotIn("C:\\Users", json.dumps(result))
 
     def test_herramientas_estructuradas_de_proyecto(self):
         projects = chat_core.cargar_indice_proyectos()

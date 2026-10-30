@@ -146,8 +146,72 @@ export const projects: Project[] = [
     ]
   },
   {
-    slug: "twinphoto",
+    slug: "airfryer-vision-cocinado",
     order: 2,
+    featured: true,
+    year: "2026",
+    status: "research",
+    category: l("Visión artificial · Sistemas inteligentes", "Computer vision · Intelligent systems"),
+    title: l("Airfryer: visión artificial para cocinado inteligente", "Airfryer: computer vision for intelligent cooking"),
+    eyebrow: l("I+D · Percepción y planificación", "R&D · Perception and planning"),
+    summary: l(
+      "Un proyecto ambicioso de I+D que conecta percepción visual y planificación de cocinado: analiza una cesta, separa sus piezas y propone tiempos y temperaturas. Combina deep learning, geometría computacional y reglas interpretables en una arquitectura orientada al cocinado automático universal.",
+      "An ambitious R&D project connecting visual perception with cooking planning: it analyses a basket, separates individual pieces and proposes cooking times and temperatures. It combines deep learning, computational geometry and interpretable rules in an architecture aimed at universal automatic cooking."
+    ),
+    problem: l(
+      "Pasar de una fotografía a una propuesta de cocinado exige resolver varios problemas conectados: alimentos que se tocan o superponen, cortes de aspecto parecido, cambios de iluminación, rebozado y tamaños diferentes. Cada error de percepción puede propagarse a la planificación. El reto consiste en coordinar reconocimiento, medidas y decisiones sin confundir la superficie visible con el grosor, el peso o el comportamiento térmico real.",
+      "Turning a photograph into a cooking proposal requires solving several connected problems: touching or overlapping pieces, visually similar cuts, changing lighting, breading and different sizes. Every perception error can propagate into planning. The challenge is to coordinate recognition, measurements and decisions without confusing visible surface area with thickness, weight or actual thermal behaviour."
+    ),
+    role: l(
+      "Diseñé y desarrollé la arquitectura, la preparación y anotación de datos, los experimentos de selección y ajuste de modelos, el análisis geométrico y el motor de reglas. Integré modelos preentrenados adaptados al proyecto en un pipeline modular con contratos, trazabilidad por pieza y pruebas de integración.",
+      "I designed and developed the architecture, data preparation and annotation, model selection and fine-tuning experiments, geometric analysis and rule engine. I integrated pretrained models adapted to the project into a modular pipeline with contracts, per-piece traceability and integration tests."
+    ),
+    decisions: [
+      l("Separar ocupación global, instancias, categoría, preparación y cocinado para evaluar y sustituir cada módulo de forma independiente.", "Separate global coverage, instances, category, preparation and cooking so each module can be evaluated and replaced independently."),
+      l("Combinar YOLO11n con SAM 2.1 para refinar contornos, conservando la máscara original cuando el refinamiento no supera los controles de calidad.", "Combine YOLO11n with SAM 2.1 to refine contours, retaining the original mask when refinement fails quality checks."),
+      l("Clasificar cada recorte con ConvNeXt-B preentrenado con DINOv3 y modelar el rebozado por separado con DINOv3 ViT y SVM RBF.", "Classify each crop with DINOv3-pretrained ConvNeXt-B and model breading separately with DINOv3 ViT and an RBF SVM."),
+      l("Agrupar imágenes relacionadas antes de repartir los datos y calibrar probabilidades; las predicciones bajo el umbral operativo quedan como UNKNOWN para revisión.", "Group related images before splitting the data and calibrate probabilities; predictions below the operational threshold remain UNKNOWN for review."),
+      l("Mantener perfiles de cocinado editables y revisión humana, con las reglas térmicas separadas de las redes visuales.", "Keep cooking profiles editable and require human review, with thermal rules separated from the visual networks.")
+    ],
+    results: [
+      l("Pipeline local integrado desde la fotografía hasta un plan provisional por pieza, con máscaras, probabilidades, factores de cálculo y registros intermedios.", "An integrated local pipeline from photograph to a provisional per-piece plan, with masks, probabilities, calculation factors and intermediate logs."),
+      l("Ejecución diferenciada en GPU con refinamiento SAM y alternativa CPU sin SAM, conservando los identificadores entre etapas.", "Separate GPU execution with SAM refinement and a CPU alternative without SAM, preserving identifiers across stages."),
+      l("Herramientas auxiliares de ampliación de datos y recetas mediante vídeo, transcripción, OCR y revisión de evidencias.", "Supporting tools for expanding data and recipes through video, transcription, OCR and evidence review.")
+    ],
+    architecture: [
+      l("Normalización de la fotografía y segmentación alimento/fondo con SegFormer-B0 para estimar la superficie visible ocupada.", "Photograph normalisation and food/background segmentation with SegFormer-B0 to estimate visible occupied surface area."),
+      l("Detección y segmentación por pieza con YOLO11n; SAM 2.1 Hiera Tiny refina las máscaras en la variante GPU y cada instancia conserva un ID.", "Per-piece detection and segmentation with YOLO11n; SAM 2.1 Hiera Tiny refines masks in the GPU variant, and each instance retains an ID."),
+      l("Recortes enmascarados y clasificación entre siete cortes de pollo con ConvNeXt-B; probabilidades calibradas y umbral operativo de asignación del 90 %.", "Masked crops and classification among seven chicken cuts with ConvNeXt-B; calibrated probabilities and a 90% operational assignment threshold."),
+      l("Especialista de rebozado con características DINOv3 y SVM RBF. La predicción se registra y su ajuste de cocinado requiere confirmación.", "A breading specialist using DINOv3 features and an RBF SVM. Its prediction is recorded, and the cooking adjustment requires confirmation."),
+      l("OpenCV y NumPy calculan áreas y descriptores por pieza; PCA alinea las máscaras para construir una silueta de consenso por categoría.", "OpenCV and NumPy calculate per-piece areas and descriptors; PCA aligns masks to build a consensus silhouette per category."),
+      l("Un motor Python con perfiles JSON propone rangos de tiempo, temperaturas y programas por fases, agrupa planes compatibles y conserva los factores de cada decisión.", "A Python engine with JSON profiles proposes time ranges, temperatures and multi-stage programmes, groups compatible plans and preserves the factors behind each decision.")
+    ],
+    validation: l(
+      "Evalué los módulos con sus propios conjuntos: el clasificador obtuvo un 91,71 % de exactitud en 603 imágenes de test; SegFormer alcanzó un 92,82 % de IoU en casos positivos dentro de una comparación de 114 fotografías. YOLO11n + SAM obtuvo un F1 de detección de 0,920 en un test histórico de 115 fotos. Estas cifras miden tareas distintas, no la calidad del cocinado final. La documentación del 29 de octubre de 2026 registra 16 pruebas automáticas de integridad y reglas, además de comprobaciones de contratos e integración. La siguiente validación requiere sesiones nuevas de cámara y ensayos térmicos en el aparato.",
+      "I evaluated each module on its own datasets: the classifier achieved 91.71% accuracy on 603 test images; SegFormer reached 92.82% IoU on positive cases within a 114-photograph comparison. YOLO11n + SAM achieved a detection F1 of 0.920 on a historical test of 115 photographs. These figures measure different tasks, rather than final cooking quality. Documentation dated 29 October 2026 records 16 automated integrity and rule tests, alongside contract and integration checks. The next validation requires new camera sessions and thermal trials on the appliance."
+    ),
+    learning: l(
+      "La potencia del proyecto está en conectar disciplinas: una buena clasificación aislada no resuelve la geometría, la incertidumbre ni la planificación. Diseñar contratos por pieza, controlar la propagación de errores y distinguir una medición visual de una magnitud física resultó tan importante como entrenar las redes.",
+      "The project's strength lies in connecting disciplines: good standalone classification does not solve geometry, uncertainty or planning. Designing per-piece contracts, controlling error propagation and distinguishing a visual measurement from a physical quantity proved as important as training the networks."
+    ),
+    scope: l(
+      "Prototipo funcional de investigación, con siete cortes de pollo y un especialista de rebozado integrados. Su ambición es ampliar el reconocimiento y adaptar los perfiles a distintos alimentos y aparatos. Los planes actuales requieren revisión humana; la calibración de cámara, los ensayos térmicos y el control físico del airfryer son pasos posteriores.",
+      "A functional research prototype with seven chicken cuts and an integrated breading specialist. Its ambition is to expand recognition and adapt profiles to different foods and appliances. Current plans require human review; camera calibration, thermal trials and physical airfryer control are subsequent steps."
+    ),
+    technologies: ["Python", "PyTorch", "DINOv3", "YOLO11n", "SAM 2.1", "SegFormer", "OpenCV", "scikit-learn"],
+    metrics: [
+      { value: "7", label: l("cortes de pollo integrados", "integrated chicken cuts"), evidence: "Airfryer V2 · configuración operativa" },
+      { value: "91,71%", label: l("accuracy del clasificador · 603 imágenes de test", "classifier accuracy · 603 test images"), evidence: "Airfryer V2 · documentación técnica general, sección 5" },
+      { value: "92,82%", label: l("IoU de alimento/fondo · casos positivos", "food/background IoU · positive cases"), evidence: "Airfryer V2 · documentación técnica general, sección 3" }
+    ],
+    links: [
+      { label: l("Ver proyecto en GitHub", "View project on GitHub"), href: "https://github.com/DuarteFernandezPineiro/vision-artificial-cocinado-inteligente", kind: "external" },
+      { label: l("Arquitectura técnica (PDF)", "Technical architecture (PDF)"), href: "https://github.com/DuarteFernandezPineiro/vision-artificial-cocinado-inteligente/blob/main/Arquitectura%20T%C3%A9cnica%20Airfryer.md.pdf", kind: "external" }
+    ]
+  },
+  {
+    slug: "twinphoto",
+    order: 3,
     featured: true,
     year: "2026",
     status: "completed",
@@ -206,7 +270,7 @@ export const projects: Project[] = [
   },
   {
     slug: "bitcoin-sentiment",
-    order: 3,
+    order: 4,
     featured: true,
     year: "2026",
     status: "deployed",
@@ -265,7 +329,7 @@ export const projects: Project[] = [
   },
   {
     slug: "asistente-profesional",
-    order: 4,
+    order: 5,
     featured: true,
     year: "2026",
     status: "deployed",

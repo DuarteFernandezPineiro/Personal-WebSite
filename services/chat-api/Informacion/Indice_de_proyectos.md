@@ -3,7 +3,7 @@ schema_version: "1.0"
 document_id: project_index
 document_type: structured_project_routing_index
 language: es
-last_updated: "2026-07-25"
+last_updated: "2026-10-30"
 source_of_truth:
   - current_markdown_project_summaries
   - verified_local_files
@@ -828,7 +828,7 @@ projects:
     project_type: personal
     status: deployed_publicly
     featured: true
-    interview_priority: 3
+    interview_priority: 4
     areas: [applied_artificial_intelligence, natural_language_processing, software_engineering]
     tags: [bitcoin, análisis de sentimiento, clasificación, aprendizaje automático, asistente explicativo, despliegue web]
     primary_technology_ids: []
@@ -879,7 +879,7 @@ projects:
     project_type: personal
     status: deployed_publicly
     featured: true
-    interview_priority: 2
+    interview_priority: 3
     areas: [applied_artificial_intelligence, natural_language_processing, software_engineering, reactive_systems]
     tags: [openai, fastapi, asgi, streaming, seguridad web, concurrencia, docker, digitalocean, posthog]
     primary_technology_ids: [python, javascript, fastapi, uvicorn, openai_responses_api, pydantic, docker, digitalocean_app_platform, posthog]
@@ -925,6 +925,57 @@ projects:
       - Las sesiones se guardan en memoria de una sola instancia; escalar a varias réplicas requeriría un almacén compartido.
       - La generación de respuestas depende de la disponibilidad y configuración de OpenAI.
       - La analítica solo recoge eventos de los usuarios que dan consentimiento y no tienen bloqueada su carga.
+
+  - project_id: project_airfryer_vision_cocinado
+    canonical_name: Airfryer, visión artificial para cocinado inteligente
+    short_name: Airfryer
+    aliases: [algoritmo airfryer, cocinado inteligente, cocinado automático, intelligent cooking, air fryer, cooking vision]
+    project_type: personal_research
+    status: functional_research_prototype
+    featured: true
+    interview_priority: 2
+    areas: [applied_artificial_intelligence, computer_vision, deep_learning, software_engineering]
+    tags: [airfryer, visión artificial, segmentación de instancias, clasificación de alimentos, DINOv3, ConvNeXt, SegFormer, YOLO11n, SAM 2.1, geometría, planificación de cocinado]
+    primary_technology_ids: [python, pytorch, transformers, opencv, scikit_learn, numpy]
+    secondary_technology_ids: []
+    role: {collaboration_type: individual, title: designer_and_developer, context: personal_research}
+    personal_contributions:
+      - Diseño de una arquitectura modular que conecta una fotografía de cesta con una propuesta provisional de cocinado por pieza.
+      - Preparación, limpieza y anotación de datos; comparación, ajuste y calibración de modelos preentrenados.
+      - Integración de SegFormer-B0 para alimento/fondo, YOLO11n con refinamiento SAM 2.1 para instancias y ConvNeXt-B preentrenado con DINOv3 para siete cortes de pollo.
+      - Especialista de rebozado basado en características DINOv3 ViT y SVM RBF, con confirmación humana antes del ajuste temporal.
+      - Geometría con OpenCV y NumPy, alineamiento PCA, siluetas de consenso y motor de reglas Python con perfiles JSON y programas por fases.
+      - Contratos entre módulos, IDs persistentes por pieza, comprobación SHA-256 de artefactos y ejecución GPU con fallback CPU sin SAM.
+      - Herramientas auxiliares para ampliar datos y recetas mediante vídeos, transcripción, OCR y revisión de evidencias.
+    team_contributions: []
+    provided_components:
+      - Arquitecturas y pesos preentrenados DINOv3, ConvNeXt, SegFormer, YOLO y SAM como base para los módulos adaptados e integrados.
+      - PyTorch, Transformers, Ultralytics, OpenCV, NumPy y scikit-learn como dependencias.
+    not_personally_implemented: [Arquitecturas y preentrenamiento originales de los modelos de terceros]
+    short_pitch: Proyecto ambicioso de I+D orientado al cocinado automático universal. Integra deep learning, geometría y reglas interpretables para separar piezas, reconocer alimentos y proponer tiempos y temperaturas. Su complejidad está en conectar percepción incierta y planificación, manteniendo trazabilidad y revisión humana.
+    objective: Ampliar progresivamente el reconocimiento y los perfiles de cocinado a distintos alimentos y aparatos mediante una arquitectura evaluable por módulos.
+    problem_solved: Coordina segmentación, clasificación, preparación y medidas de piezas que se tocan o superponen para alimentar una planificación interpretable.
+    verifiable_results:
+      - Pipeline local integrado con siete cortes de pollo y un especialista de rebozado.
+      - Clasificador con 91,71 % de exactitud en 603 imágenes de test; resultado del estudio de clasificación, no del cocinado final.
+      - SegFormer-B0 con 92,82 % de IoU en casos positivos dentro de una comparación de 114 fotografías.
+      - YOLO11n + SAM con F1 de detección 0,920 a IoU 0,50 en un test histórico de 115 fotografías.
+      - La revisión documentada del 29 de octubre de 2026 registra 16 pruebas automáticas de integridad y reglas; también se documentan comprobaciones de integración.
+    competency_ids: [skill_diseno_modular, skill_testing_validacion, skill_opencv_imagen, skill_geometria_vision]
+    summary_path: null
+    advanced_path: null
+    repository: https://github.com/DuarteFernandezPineiro/vision-artificial-cocinado-inteligente
+    demo: null
+    rag_enabled: true
+    retrieval_metadata: {project_id: project_airfryer_vision_cocinado, allowed_document_types: [summary]}
+    evidence_strength: verified_local_implementation_and_documented_evaluations
+    known_limitations:
+      - El dominio integrado se limita a siete cortes de pollo; el cocinado universal es la dirección de desarrollo.
+      - Los planes son provisionales, requieren revisión humana y perfiles calibrados mediante ensayos térmicos con el aparato.
+      - Las métricas pertenecen a módulos y conjuntos distintos; no miden la calidad del cocinado ni garantizan rendimiento en nuevas sesiones de cámara.
+      - El área visible no proporciona por sí sola grosor, peso ni dimensiones físicas; estas últimas necesitan calibración de cámara.
+      - La asignación operativa del clasificador al 90 % no equivale a una garantía estadística de precisión.
+      - El control físico del airfryer y la ampliación a otros alimentos y aparatos son pasos posteriores.
 
 generated_indexes:
   area_index: derived_from_projects_areas

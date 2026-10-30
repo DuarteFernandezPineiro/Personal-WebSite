@@ -53,7 +53,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <SectionShell className="projects-section" tone="paper">
         <div className="section-heading split-heading">
-          <Reveal><Eyebrow>{isEs ? "Proyectos principales / 04" : "Main projects / 04"}</Eyebrow><h2>{isEs ? "Cuatro proyectos para entender cómo trabajo." : "Four projects that show how I work."}</h2></Reveal>
+          <Reveal><Eyebrow>{`${isEs ? "Proyectos principales" : "Main projects"} / ${String(projects.length).padStart(2, "0")}`}</Eyebrow><h2>{isEs ? "Proyectos para entender cómo trabajo." : "Projects that show how I work."}</h2></Reveal>
           <Reveal delay={0.1}><p><ProfessionalText text={isEs ? "Cada caso explica el problema, la solución, las tecnologías utilizadas, cómo lo hice y la forma en que comprobé el resultado." : "Each case explains the problem, the solution, the technologies used, how I built it and how I checked the result."} locale={locale} phrases={isEs ? ["problema", "cómo lo hice", "comprobé el resultado"] : ["problem", "how I built it", "checked the result"]} /></p></Reveal>
         </div>
         <ProjectShowcase locale={locale} viewCase={dict.common.viewCase} projects={projects} />
