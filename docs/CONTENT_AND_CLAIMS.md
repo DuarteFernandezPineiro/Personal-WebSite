@@ -9,6 +9,12 @@
 
 Do not invent metrics, production usage, team ownership or client outcomes. Say “prototype”, “academic project” or “experimental” when that is the verified scope.
 
+## Handling project documentation
+
+For implementation, layout, protected fields and regression checks, follow [`Implementacion_Documentacion.md`](../Implementacion_Documentacion.md).
+
+Project documentation can provide evidence for public portfolio claims, but it is read-only during website-copy tasks. Update the portfolio content source rather than editing, reformatting or rewriting the supplied project document. Change that document only when the user explicitly names it as the requested output.
+
 ## Current positioning
 
 - Duarte Fernández Piñeiro, Artificial Intelligence Engineer.

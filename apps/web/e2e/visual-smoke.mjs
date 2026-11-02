@@ -2,6 +2,7 @@ import { chromium } from "playwright";
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
+import { assertAllProjectDocumentationLayouts } from "./project-documentation-smoke.mjs";
 
 const base = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000";
 const output = resolve("test-results", "visual-smoke");
@@ -19,9 +20,24 @@ function assert(condition, message) {
 
 async function assertAirfryerCase(page, locale) {
   assert(await page.getByRole("heading", { level: 1, name: /Airfryer:/ }).isVisible(), `The ${locale} Airfryer case is missing`);
-  assert((await page.locator(".case-flow li").count()) === 6, `The ${locale} Airfryer pipeline is incomplete`);
+  const sections = page.locator(".case-documentation > section");
+  assert((await sections.count()) === 7, `The ${locale} Airfryer documentation is incomplete`);
+  assert((await page.locator(".airfryer-diagram svg").count()) === 1, `The ${locale} Airfryer diagram is missing`);
+  const sectionFrames = await sections.evaluateAll((elements) => elements.map((element) => {
+    const frame = element.getBoundingClientRect();
+    return { top: frame.top, bottom: frame.bottom, left: frame.left, right: frame.right };
+  }));
+  const contentFrame = await page.locator(".case-layout").evaluate((element) => {
+    const frame = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    return { left: frame.left + parseFloat(style.paddingLeft), right: frame.right - parseFloat(style.paddingRight) };
+  });
+  sectionFrames.forEach((frame, index) => {
+    if (index > 0) assert(frame.top >= sectionFrames[index - 1].bottom - 1, `The ${locale} Airfryer section ${index + 1} overlaps or is visually out of order`);
+    if (index >= 2) assert(Math.abs(frame.left - contentFrame.left) <= 2 && Math.abs(frame.right - contentFrame.right) <= 2, `The ${locale} Airfryer section ${index + 1} does not use both content margins`);
+  });
   assert((await page.locator(".case-fact-metrics dd").count()) === 3, `The ${locale} Airfryer module metrics are missing`);
-  const narrative = await page.locator(".case-article").textContent();
+  const narrative = (await page.locator(".case-article").allTextContents()).join(" ");
   assert(narrative.includes(locale === "es" ? "siete cortes de pollo" : "seven chicken cuts"), `The ${locale} Airfryer scope is missing`);
   assert(narrative.includes(locale === "es" ? "revisión humana" : "human review"), `The ${locale} Airfryer review requirement is missing`);
   assert(!(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)), `The ${locale} Airfryer page has horizontal overflow`);
@@ -261,7 +277,8 @@ try {
   await page.waitForURL(`${base}/es/projects/rag-hibrido-documentacion`);
   await page.locator(".page-pixel-scene").waitFor({ state: "hidden", timeout: 6_000 });
   assert(await page.getByRole("heading", { level: 1, name: /RAG híbrido/i }).isVisible(), "Case study did not open");
-  assert(await page.getByRole("heading", { name: /cómo funciona el sistema/i }).isVisible(), "Architecture narrative is missing");
+  assert(await page.getByRole("heading", { name: "3. Solución y arquitectura", exact: true }).isVisible(), "RAG documentation architecture section is missing");
+  assert((await page.locator("[data-project-diagram='rag'] svg").count()) === 1, "RAG documentation diagram is missing");
   assert((await page.locator(".case-video iframe").count()) === 1, "RAG presentation is missing");
   assert((await page.locator(".previous-case").count()) === 0, "The first project should not have a previous-project link");
   assert((await page.locator(".next-case").count()) === 1, "The first project is missing its next-project link");
@@ -458,7 +475,8 @@ try {
   const unexpectedReducedErrors = unexpectedBrowserErrors(reducedErrors);
   assert(unexpectedReducedErrors.length === 0, `Reduced-motion browser errors: ${unexpectedReducedErrors.join(" | ")}`);
   await reduced.close();
-  console.log(JSON.stringify({ ok: true, projectCount, screenshots: output }));
+  const documentationChecks = await assertAllProjectDocumentationLayouts(browser, { base, output: resolve(output, "project-documentation") });
+  console.log(JSON.stringify({ ok: true, projectCount, documentationChecks, screenshots: output }));
 } finally {
   await browser.close();
 }

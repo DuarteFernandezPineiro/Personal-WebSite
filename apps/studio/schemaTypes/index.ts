@@ -70,6 +70,21 @@ const project = editorialDocument("project", "Project", [
   defineField({ name: "validation", title: "Validation", type: "localizedText" }),
   defineField({ name: "learning", title: "Key learning", type: "localizedText" }),
   defineField({ name: "scope", title: "Scope and limitations", type: "localizedText" }),
+  defineField({
+    name: "documentationSections",
+    title: "Long-form documentation sections",
+    description: "Optional bilingual sections. Markdown paragraphs, lists and inline emphasis are supported; Mermaid blocks render as a diagram.",
+    type: "array",
+    of: [defineArrayMember({
+      type: "object",
+      name: "projectDocumentationSection",
+      fields: [
+        defineField({ name: "heading", title: "Section heading", type: "localizedString", validation: (rule) => rule.required() }),
+        defineField({ name: "body", title: "Section body", type: "localizedText", validation: (rule) => rule.required() })
+      ],
+      preview: { select: { title: "heading.es" } }
+    })]
+  }),
   defineField({ name: "youtubeId", title: "YouTube video ID", type: "string" }),
   defineField({ name: "metrics", title: "Verified metrics", type: "array", of: [defineArrayMember({ type: "object", fields: [defineField({ name: "value", type: "string" }), defineField({ name: "label", type: "localizedString" }), defineField({ name: "source", type: "string" })] })] }),
   defineField({ name: "media", title: "Media", type: "array", of: [defineArrayMember({ type: "reference", to: [{ type: "mediaAsset" }] })] })

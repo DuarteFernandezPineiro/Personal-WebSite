@@ -1,7 +1,25 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { about, credentials, isLocale, profile, projects, translate } from "./index";
 
 describe("public content", () => {
+  it.each([
+    { slug: "rag-hibrido-documentacion", sourceSlug: "tfg" },
+    { slug: "twinphoto", sourceSlug: "similitud-imagenes" },
+    { slug: "asistente-profesional", sourceSlug: "cv-interactivo" },
+    { slug: "bitcoin-sentiment", sourceSlug: "clasificador-binario-bitcoin" }
+  ])("publishes the reviewed $slug Markdown verbatim in Spanish with complete English counterparts", ({ slug, sourceSlug }) => {
+    const source = readFileSync(new URL(`../../../docs/proyectos/${sourceSlug}/Documentacion_Portfolio_${sourceSlug}.md`, import.meta.url), "utf8").replace(/\r\n/g, "\n");
+    const parts = source.split(/^## (.+)\n/gm).slice(1);
+    const sections = projects.find((project) => project.slug === slug)?.documentationSections;
+    expect(sections).toHaveLength(7);
+    sections?.forEach((section, index) => {
+      expect(section.heading.es).toBe(parts[index * 2].trim());
+      expect(section.body.es).toBe(parts[index * 2 + 1].trim());
+      expect(section.heading.en.length).toBeGreaterThan(5);
+      expect(section.body.en.length).toBeGreaterThan(100);
+    });
+  });
   it("contains five featured case studies with unique slugs", () => {
     const featured = projects.filter((project) => project.featured);
     expect(featured).toHaveLength(5);

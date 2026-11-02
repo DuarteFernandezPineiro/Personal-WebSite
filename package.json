@@ -13,6 +13,7 @@
     "build:all": "npm run build --workspaces --if-present",
     "check": "npm run typecheck --workspaces --if-present && npm run test --workspaces --if-present",
     "test:e2e": "node apps/web/e2e/visual-smoke.mjs",
+    "test:documentation": "node apps/web/e2e/project-documentation-smoke.mjs",
     "test:chat": "python scripts/run_chat_tests.py"
   },
   "engines": {

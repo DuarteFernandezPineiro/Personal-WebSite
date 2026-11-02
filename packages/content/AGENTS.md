@@ -3,6 +3,7 @@
 Read `../../docs/CONTENT_AND_CLAIMS.md` before editing professional claims.
 
 - Every public string is bilingual and typed as `LocalizedText`.
+- Treat project documentation supplied as evidence as read-only; update portfolio copy here rather than the source document, unless the user explicitly requests that document as the output.
 - Preserve conservative scope labels and evidence on metrics. Never turn coursework, prototypes or experiments into production claims.
 - `src/content.ts` is the complete local fallback and must remain useful without Sanity.
 - Adding a field to `Project` or `SiteProfile` also requires checking the Sanity schema, CMS query/merge and consuming pages.

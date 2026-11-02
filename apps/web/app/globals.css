@@ -552,20 +552,81 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .case-page { background: var(--paper-bright); }
 .case-hero { padding-top: 11rem; padding-bottom: clamp(6rem, 10vw, 10rem); background: var(--paper-bright); color: var(--ink); border-bottom: 1px solid var(--line); }
-.case-hero h1 { max-width: 79rem; margin-top: 2.5rem; }
+.case-hero h1 { max-width: 79rem; margin-top: 2.5rem; overflow-wrap: anywhere; }
 .case-hero > p { max-width: 53rem; margin-top: 3rem; color: #344846; font-size: 1.1rem; line-height: 1.8; }
 .case-number { top: 11.5rem; color: #5e706d; }
 .case-layout { max-width: var(--content-max); margin: 0 auto; padding: clamp(7rem, 12vw, 12rem) var(--pad); display: grid; grid-template-columns: minmax(0, 1fr) 21rem; gap: clamp(4rem, 10vw, 11rem); align-items: start; }
 .case-article { max-width: var(--reading-max); }
+.case-layout--documentation { row-gap: 0; }
+.case-layout--documentation .case-article { min-width: 0; }
+.case-layout--documentation .case-facts { grid-column: 2; grid-row: 1; position: static; }
+.case-layout--documentation .case-article--wide { grid-column: 1 / -1; width: 100%; max-width: none; }
+.case-layout--documentation .case-article section { padding-bottom: clamp(3rem, 5vw, 5rem); margin-bottom: clamp(3rem, 5vw, 5rem); }
+.case-layout--documentation .case-article section:last-child { margin-bottom: 0; }
+.case-layout--documentation h2 { scroll-margin-top: 9rem; }
+.case-layout--documentation .airfryer-diagram { max-width: 64rem; margin: 2.5rem auto; }
 .case-article section { padding-bottom: clamp(5rem, 9vw, 8rem); margin-bottom: clamp(5rem, 9vw, 8rem); border-bottom: 1px solid var(--line); }
 .case-article section:last-child { margin-bottom: 0; }
 .case-article h2 { margin: 1.25rem 0 2.4rem; font: 300 clamp(2.6rem, 4.6vw, 4.7rem)/1.02 var(--serif); letter-spacing: -.04em; }
 .case-article h3 { margin: 3.5rem 0 1.2rem; font: 400 1.65rem var(--serif); }
 .case-article section > p { margin: 0 0 1.4rem; color: #344846; font-size: 1.06rem; line-height: 1.85; }
+.case-document-body p { margin: 0 0 1.4rem; color: #344846; font-size: 1.06rem; line-height: 1.85; }
+.case-document-body p:last-child { margin-bottom: 0; }
+.case-document-list { margin: 0 0 1.6rem; padding-left: 1.35rem; color: #344846; }
+.case-document-list li { padding: .45rem 0 .45rem .3rem; line-height: 1.8; }
+.case-document-body code { padding: .12em .35em; background: #f0eee7; color: var(--ink); font: .86em var(--mono); }
+.case-document-divider { margin: 2rem 0; border: 0; border-top: 1px solid var(--line); }
+.case-document-code { max-width: 100%; overflow-x: auto; padding: 1rem; background: var(--paper); }
+.rag-diagram { max-width: 64rem; margin: 2.5rem auto; padding: 1rem; border: 1px solid var(--line); background: var(--paper-bright); }
+.rag-diagram__viewport { overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+.rag-diagram__viewport:focus-visible { outline: 2px solid var(--tide-deep); outline-offset: 4px; }
+.rag-diagram__svg { display: block; width: 100%; min-width: 640px; height: auto; font-family: var(--sans); }
+.rag-diagram__stage { fill: #f3faf8; stroke: #b7d9d1; }
+.rag-diagram__stage--query { fill: #f5f8fb; stroke: #c9d6e2; }
+.rag-diagram__heading { fill: var(--ink); font: 600 13px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+.rag-diagram__node rect { fill: var(--paper-bright); stroke: var(--tide-deep); stroke-width: 1.3; }
+.rag-diagram__node text { fill: var(--ink); font-size: 14px; }
+.rag-diagram__edges path { fill: none; stroke: #71827f; stroke-width: 1.6; marker-end: url(#rag-diagram-arrow); }
+.rag-diagram__svg marker path { fill: var(--ink); }
+.rag-diagram__bypass { stroke-dasharray: 5 5; }
+.rag-diagram__note { fill: #526462; font-size: 12px; }
+.project-flow { max-width: 64rem; margin: 2.5rem auto; padding: 1rem; border: 1px solid var(--line); background: var(--paper-bright); }
+.project-flow__viewport { overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+.project-flow__viewport:focus-visible { outline: 2px solid var(--tide-deep); outline-offset: 4px; }
+.project-flow__svg { display: block; width: 100%; min-width: 780px; height: auto; font-family: var(--sans); }
+.project-flow__stage { fill: color-mix(in srgb, var(--tide) 7%, var(--paper-bright)); stroke: var(--line); }
+.project-flow__stage--1 { fill: color-mix(in srgb, var(--ink) 3%, var(--paper-bright)); }
+.project-flow__heading { fill: var(--ink); font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+.project-flow__edges path { fill: none; stroke: var(--tide-deep); stroke-width: 1.5; }
+.project-flow__svg marker path { fill: var(--ink); }
+.project-flow__node rect { fill: var(--paper-bright); stroke: var(--tide-deep); stroke-width: 1.3; }
+.project-flow__node text { fill: var(--ink); font-size: 14px; }
+.project-flow__label { fill: var(--ink); font-size: 11px; stroke: var(--paper-bright); stroke-width: 5px; paint-order: stroke fill; stroke-linejoin: round; }
 .case-flow { list-style: none; margin: 0; padding: 0; }
 .case-flow li { display: grid; grid-template-columns: 2.5rem 1fr; gap: 1.5rem; padding: 1.6rem 0; border-top: 1px solid var(--line); }
 .case-flow li span { padding-top: .25rem; color: #60716f; font: .62rem var(--mono); }
 .case-flow li p { margin: 0; color: #344846; line-height: 1.75; }
+.airfryer-diagram { margin: -2rem 0 clamp(5rem, 9vw, 8rem); padding: 1rem; border: 1px solid var(--line); background: #fbfaf6; }
+.airfryer-diagram__viewport { overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; scrollbar-color: var(--tide-deep) transparent; }
+.airfryer-diagram__viewport:focus-visible { outline: 2px solid var(--tide-deep); outline-offset: 4px; }
+.airfryer-diagram__svg { display: block; width: 100%; min-width: 640px; height: auto; font-family: var(--sans); }
+.airfryer-diagram__group { stroke-width: 1; }
+.airfryer-diagram__group--input { fill: #f5f8fb; stroke: #c9d6e2; }
+.airfryer-diagram__group--vision { fill: #f3faf8; stroke: #b7d9d1; }
+.airfryer-diagram__group--analysis { fill: #f8f5fc; stroke: #d2c5e6; }
+.airfryer-diagram__group--planning { fill: #fffbf3; stroke: #ead5ad; }
+.airfryer-diagram__group-title { fill: #526462; font: 600 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.airfryer-diagram__edges path { fill: none; stroke: #71827f; stroke-width: 1.5; marker-end: url(#airfryer-diagram-arrow); }
+.airfryer-diagram__edges .airfryer-diagram__edge--control { stroke-dasharray: 4 4; }
+.airfryer-diagram__edges marker path { fill: #71827f; stroke: none; }
+.airfryer-diagram__node rect { stroke-width: 1.35; }
+.airfryer-diagram__node--input rect { fill: #e8f1fb; stroke: #4b78a8; }
+.airfryer-diagram__node--vision rect { fill: #e8f6f3; stroke: #459487; }
+.airfryer-diagram__node--analysis rect { fill: #f2edfb; stroke: #8065ad; }
+.airfryer-diagram__node--planning rect { fill: #fff3df; stroke: #c48a35; }
+.airfryer-diagram__node text { fill: #17324d; font-size: 12px; }
+.airfryer-diagram__node-title { font-weight: 650; }
+.airfryer-diagram__node-detail { fill: #405653; font-size: 10px; font-weight: 400; }
 .case-decision-list,
 .case-result-list { margin: 0; padding: 0; list-style: none; }
 .case-decision-list li,
@@ -637,6 +698,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .project-index-row { grid-template-columns: 3rem minmax(0, 1fr); }
   .project-index-row > .project-case-link { grid-column: 2; }
   .case-facts { position: static; max-width: 38rem; }
+  .case-layout--documentation .case-facts { grid-column: 1; grid-row: auto; order: 1; margin-top: 3rem; }
   .about-identity { grid-template-columns: 1fr; }
   .profile-portrait { max-width: 42rem; }
   .athletics-image-wrap { min-height: 58vh; }

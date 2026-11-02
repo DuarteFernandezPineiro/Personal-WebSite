@@ -5,6 +5,10 @@ import Link from "next/link";
 import Script from "next/script";
 import { notFound } from "next/navigation";
 import { ProfessionalText } from "@/components/ui/professional-text";
+import { ProjectDocumentation } from "@/components/sections/project-documentation";
+import { AirfryerPipelineDiagram } from "@/components/sections/airfryer-pipeline-diagram";
+import { RagPipelineDiagram } from "@/components/sections/rag-pipeline-diagram";
+import { ProjectFlowDiagram } from "@/components/sections/project-flow-diagram";
 import { getPortfolioContent } from "@/lib/content-repository";
 import { locales, requireLocale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
@@ -36,6 +40,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   if (!project) notFound();
 
   const isEs = locale === "es";
+  const documentationDiagram = slug === "airfryer-vision-cocinado"
+    ? <AirfryerPipelineDiagram locale={locale} />
+    : slug === "rag-hibrido-documentacion" ? <RagPipelineDiagram locale={locale} />
+    : slug === "twinphoto" || slug === "asistente-profesional" || slug === "bitcoin-sentiment"
+      ? <ProjectFlowDiagram project={slug} locale={locale} /> : undefined;
   const index = contentProjects.findIndex((item) => item.slug === slug);
   const previous = index > 0 ? contentProjects[index - 1] : null;
   const next = index < contentProjects.length - 1 ? contentProjects[index + 1] : null;
@@ -59,13 +68,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <header className="case-hero">
         <Link className="back-link" href={`/${locale}/projects`} prefetch={false}>← {isEs ? "Proyectos" : "Projects"}</Link>
         <div className="case-number">{String(index + 1).padStart(2, "0")} / {String(contentProjects.length).padStart(2, "0")}</div>
-        <Eyebrow>{translate(project.eyebrow, locale)} · {project.year}</Eyebrow>
+        {project.slug === "airfryer-vision-cocinado" ? null : <Eyebrow>{translate(project.eyebrow, locale)} · {project.year}</Eyebrow>}
         <h1>{translate(project.title, locale)}</h1>
         <p><ProfessionalText text={translate(project.summary, locale)} locale={locale} /></p>
       </header>
 
-      <div className="case-layout">
+      <div className={`case-layout${project.documentationSections?.length ? " case-layout--documentation" : ""}`}>
         <article className="case-article">
+          {project.documentationSections?.length ? <ProjectDocumentation sections={project.documentationSections.slice(0, 2)} locale={locale} diagram={documentationDiagram} /> : <>
           <section aria-labelledby="case-overview">
             <Eyebrow>01 / {isEs ? "Visión general" : "Overview"}</Eyebrow>
             <h2 id="case-overview">{isEs ? "Qué es y qué problema resuelve" : "What it is and the problem it solves"}</h2>
@@ -104,6 +114,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <p><ProfessionalText text={translate(project.learning, locale)} locale={locale} /></p>
             </section>
           ) : null}
+          </>}
         </article>
 
         <aside className="case-facts" aria-label={isEs ? "Ficha del proyecto" : "Project facts"}>
@@ -114,6 +125,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {project.metrics.length ? <div><span>{isEs ? "Datos destacados" : "Key figures"}</span><dl className="case-fact-metrics">{project.metrics.map((metric) => <div key={metric.label.es}><dt>{translate(metric.label, locale)}</dt><dd>{metric.value}</dd></div>)}</dl></div> : null}
           {project.links.length ? <div className="case-fact-links"><span>{isEs ? "Enlaces" : "Links"}</span>{project.links.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{translate(link.label, locale)}<Arrow /></a>)}</div> : null}
         </aside>
+        {project.documentationSections && project.documentationSections.length > 2 ? (
+          <div className="case-article case-article--wide">
+            <ProjectDocumentation sections={project.documentationSections.slice(2)} locale={locale} startIndex={2} diagram={documentationDiagram} />
+          </div>
+        ) : null}
       </div>
 
       {project.video ? <section className="case-video"><div className="case-video-copy"><Eyebrow>{isEs ? "Presentación técnica" : "Technical presentation"}</Eyebrow><h2>{translate(project.video.title, locale)}</h2><p><ProfessionalText text={translate(project.video.description, locale)} locale={locale} /></p></div><div className="case-video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${project.video.youtubeId}`} title={translate(project.video.title, locale)} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div></section> : null}

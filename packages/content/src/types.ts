@@ -15,6 +15,11 @@ export type Metric = {
   evidence?: string;
 };
 
+export type ProjectDocumentationSection = {
+  heading: LocalizedText;
+  body: LocalizedText;
+};
+
 export type Project = {
   slug: string;
   order: number;
@@ -33,6 +38,7 @@ export type Project = {
   validation?: LocalizedText;
   learning?: LocalizedText;
   scope?: LocalizedText;
+  documentationSections?: ProjectDocumentationSection[];
   video?: {
     youtubeId: string;
     title: LocalizedText;

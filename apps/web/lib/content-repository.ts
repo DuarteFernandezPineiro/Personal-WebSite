@@ -1,4 +1,4 @@
-import { about, capabilities, credentials, hobbies, profile, projects, timeline, type Credential, type LocalizedText, type SiteProfile, type Project } from "@duarte/content";
+import { about, capabilities, credentials, hobbies, profile, projects, timeline, type Credential, type LocalizedText, type SiteProfile, type Project, type ProjectDocumentationSection } from "@duarte/content";
 import { cache } from "react";
 
 type SanityDocument = {
@@ -26,6 +26,7 @@ type SanityDocument = {
   validation?: LocalizedText;
   learning?: LocalizedText;
   scope?: LocalizedText;
+  documentationSections?: ProjectDocumentationSection[];
   metrics?: Project["metrics"];
   order?: number;
 };
@@ -48,7 +49,7 @@ export const getPortfolioContent = cache(async (): Promise<PortfolioContent> => 
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() || "production";
   if (!projectId) return fallback;
 
-  const query = `*[_type in ["profile","project","certification"] && status == "published" && visible == true && confidential != true] | order(order asc){_type,"slug":slug.current,title,summary,kind,issuer,period,credentialId,role,intro,availability,location,email,year,featured,technologies,problem,contribution,decisions,results,architecture,validation,learning,scope,metrics,order}`;
+  const query = `*[_type in ["profile","project","certification"] && status == "published" && visible == true && confidential != true] | order(order asc){_type,"slug":slug.current,title,summary,kind,issuer,period,credentialId,role,intro,availability,location,email,year,featured,technologies,problem,contribution,decisions,results,architecture,validation,learning,scope,documentationSections,metrics,order}`;
   const endpoint = `https://${projectId}.api.sanity.io/v2025-02-19/data/query/${dataset}?query=${encodeURIComponent(query)}`;
   try {
     const response = await fetch(endpoint, { next: { revalidate: 300, tags: ["portfolio-content"] } });
@@ -78,6 +79,7 @@ export const getPortfolioContent = cache(async (): Promise<PortfolioContent> => 
         ...(document.validation && { validation: document.validation }),
         ...(document.learning && { learning: document.learning }),
         ...(document.scope && { scope: document.scope }),
+        ...(document.documentationSections && { documentationSections: document.documentationSections }),
         ...(document.metrics && { metrics: document.metrics })
       };
     });

@@ -1,4 +1,8 @@
 import type { AboutProfile, Capability, Credential, Hobby, Project, SiteProfile, TimelineEntry } from "./types";
+import { ragDocumentationSections } from "./rag-documentation";
+import { twinphotoDocumentationSections } from "./twinphoto-documentation";
+import { assistantDocumentationSections } from "./assistant-documentation";
+import { bitcoinDocumentationSections } from "./bitcoin-documentation";
 
 const l = (es: string, en: string) => ({ es, en });
 
@@ -79,6 +83,7 @@ export const about: AboutProfile = {
 export const projects: Project[] = [
   {
     slug: "rag-hibrido-documentacion",
+    documentationSections: ragDocumentationSections,
     order: 1,
     featured: true,
     year: "2026",
@@ -153,51 +158,254 @@ export const projects: Project[] = [
     status: "research",
     category: l("Visión artificial · Sistemas inteligentes", "Computer vision · Intelligent systems"),
     title: l("Airfryer: visión artificial para cocinado inteligente", "Airfryer: computer vision for intelligent cooking"),
-    eyebrow: l("I+D · Percepción y planificación", "R&D · Perception and planning"),
+    eyebrow: l("Prototipo modular de visión artificial y planificación · V2", "Modular computer vision and planning prototype · V2"),
     summary: l(
       "Un proyecto ambicioso de I+D que conecta percepción visual y planificación de cocinado: analiza una cesta, separa sus piezas y propone tiempos y temperaturas. Combina deep learning, geometría computacional y reglas interpretables en una arquitectura orientada al cocinado automático universal.",
       "An ambitious R&D project connecting visual perception with cooking planning: it analyses a basket, separates individual pieces and proposes cooking times and temperatures. It combines deep learning, computational geometry and interpretable rules in an architecture aimed at universal automatic cooking."
     ),
     problem: l(
-      "Pasar de una fotografía a una propuesta de cocinado exige resolver varios problemas conectados: alimentos que se tocan o superponen, cortes de aspecto parecido, cambios de iluminación, rebozado y tamaños diferentes. Cada error de percepción puede propagarse a la planificación. El reto consiste en coordinar reconocimiento, medidas y decisiones sin confundir la superficie visible con el grosor, el peso o el comportamiento térmico real.",
-      "Turning a photograph into a cooking proposal requires solving several connected problems: touching or overlapping pieces, visually similar cuts, changing lighting, breading and different sizes. Every perception error can propagate into planning. The challenge is to coordinate recognition, measurements and decisions without confusing visible surface area with thickness, weight or actual thermal behaviour."
+      "Configurar una airfryer requiere elegir programa, tiempo y temperatura según el tipo, tamaño y preparación de los alimentos. Una receta fija no representa bien una cesta con piezas distintas. La foto tampoco revela su grosor ni permite confirmar que el interior esté cocinado, por lo que las medidas visibles no deben confundirse con magnitudes físicas o resultados térmicos.",
+      "Setting an airfryer requires choosing a programme, time and temperature for the food type, size and preparation. A fixed recipe does not represent a basket of different pieces well. A photo also cannot reveal thickness or confirm that the inside is cooked, so visible measurements must not be confused with physical quantities or thermal outcomes."
     ),
     role: l(
-      "Diseñé y desarrollé la arquitectura, la preparación y anotación de datos, los experimentos de selección y ajuste de modelos, el análisis geométrico y el motor de reglas. Integré modelos preentrenados adaptados al proyecto en un pipeline modular con contratos, trazabilidad por pieza y pruebas de integración.",
-      "I designed and developed the architecture, data preparation and annotation, model selection and fine-tuning experiments, geometric analysis and rule engine. I integrated pretrained models adapted to the project into a modular pipeline with contracts, per-piece traceability and integration tests."
+      "Desarrollé una prueba de concepto que conecta estimación de ocupación, separación y clasificación de piezas, medidas geométricas y planificación. La ejecución coordina modelos mediante adaptadores, conserva identificadores por pieza y registra resultados intermedios, logs y advertencias para que la propuesta se pueda revisar.",
+      "I developed a proof of concept connecting occupancy estimation, piece separation and classification, geometric measurements and planning. The run coordinates models through adapters, preserves per-piece identifiers, and records intermediate results, logs and warnings so the proposal can be reviewed."
     ),
     decisions: [
-      l("Separar ocupación global, instancias, categoría, preparación y cocinado para evaluar y sustituir cada módulo de forma independiente.", "Separate global coverage, instances, category, preparation and cooking so each module can be evaluated and replaced independently."),
-      l("Combinar YOLO11n con SAM 2.1 para refinar contornos, conservando la máscara original cuando el refinamiento no supera los controles de calidad.", "Combine YOLO11n with SAM 2.1 to refine contours, retaining the original mask when refinement fails quality checks."),
-      l("Clasificar cada recorte con ConvNeXt-B preentrenado con DINOv3 y modelar el rebozado por separado con DINOv3 ViT y SVM RBF.", "Classify each crop with DINOv3-pretrained ConvNeXt-B and model breading separately with DINOv3 ViT and an RBF SVM."),
-      l("Agrupar imágenes relacionadas antes de repartir los datos y calibrar probabilidades; las predicciones bajo el umbral operativo quedan como UNKNOWN para revisión.", "Group related images before splitting the data and calibrate probabilities; predictions below the operational threshold remain UNKNOWN for review."),
-      l("Mantener perfiles de cocinado editables y revisión humana, con las reglas térmicas separadas de las redes visuales.", "Keep cooking profiles editable and require human review, with thermal rules separated from the visual networks.")
+      l("Separar la máscara semántica global de alimento/fondo de la segmentación por instancia permite evaluar ocupación y piezas individualmente.", "Keeping the global food/background semantic mask separate from instance segmentation allows occupancy and individual pieces to be evaluated independently."),
+      l("Usar YOLO11n para proponer piezas y SAM 2.1 Hiera Tiny para refinar sus contornos; la ejecución en CPU omite SAM y se registra como una variante distinta.", "Use YOLO11n to propose pieces and SAM 2.1 Hiera Tiny to refine their contours; CPU execution omits SAM and is recorded as a distinct variant."),
+      l("Asignar tareas especializadas: SegFormer-B0 para ocupación, DINOv3 ConvNeXt-B para siete cortes de pollo y DINOv3 ViT-B/16 con SVM RBF para rebozado.", "Assign specialised tasks: SegFormer-B0 for occupancy, DINOv3 ConvNeXt-B for seven chicken cuts, and DINOv3 ViT-B/16 with an RBF SVM for breading."),
+      l("Mantener el planificador como motor Python determinista con perfiles JSON, separado de los modelos visuales y con factores de cálculo trazables.", "Keep the planner as a deterministic Python engine with JSON profiles, separate from the vision models and with traceable calculation factors."),
+      l("Preparar particiones por tarea y agrupar imágenes relacionadas para reducir filtraciones; las predicciones inciertas quedan disponibles para revisión humana.", "Prepare task-specific splits and group related images to reduce leakage; uncertain predictions remain available for human review.")
     ],
     results: [
-      l("Pipeline local integrado desde la fotografía hasta un plan provisional por pieza, con máscaras, probabilidades, factores de cálculo y registros intermedios.", "An integrated local pipeline from photograph to a provisional per-piece plan, with masks, probabilities, calculation factors and intermediate logs."),
-      l("Ejecución diferenciada en GPU con refinamiento SAM y alternativa CPU sin SAM, conservando los identificadores entre etapas.", "Separate GPU execution with SAM refinement and a CPU alternative without SAM, preserving identifiers across stages."),
-      l("Herramientas auxiliares de ampliación de datos y recetas mediante vídeo, transcripción, OCR y revisión de evidencias.", "Supporting tools for expanding data and recipes through video, transcription, OCR and evidence review.")
+      l("V2 completa el recorrido desde una imagen hasta un plan JSON provisional, con máscara global, instancias, clasificación, atributo de rebozado y geometría.", "V2 completes the journey from an image to a provisional JSON plan, with a global mask, instances, classification, breading attribute and geometry."),
+      l("Cada pieza mantiene un identificador común entre máscaras, predicciones y medidas; la salida registra propuestas y advertencias para su revisión.", "Each piece keeps a shared identifier across masks, predictions and measurements; the output records proposals and warnings for review."),
+      l("En un ejemplo guardado, la ejecución terminó con siete piezas y dejó constancia de clases bajo el umbral, encuadre sin calibración física y cocinado pendiente de revisión.", "In a saved example, the run finished with seven pieces and recorded classes below threshold, an uncalibrated frame and cooking that still needed review.")
     ],
     architecture: [
-      l("Normalización de la fotografía y segmentación alimento/fondo con SegFormer-B0 para estimar la superficie visible ocupada.", "Photograph normalisation and food/background segmentation with SegFormer-B0 to estimate visible occupied surface area."),
-      l("Detección y segmentación por pieza con YOLO11n; SAM 2.1 Hiera Tiny refina las máscaras en la variante GPU y cada instancia conserva un ID.", "Per-piece detection and segmentation with YOLO11n; SAM 2.1 Hiera Tiny refines masks in the GPU variant, and each instance retains an ID."),
-      l("Recortes enmascarados y clasificación entre siete cortes de pollo con ConvNeXt-B; probabilidades calibradas y umbral operativo de asignación del 90 %.", "Masked crops and classification among seven chicken cuts with ConvNeXt-B; calibrated probabilities and a 90% operational assignment threshold."),
-      l("Especialista de rebozado con características DINOv3 y SVM RBF. La predicción se registra y su ajuste de cocinado requiere confirmación.", "A breading specialist using DINOv3 features and an RBF SVM. Its prediction is recorded, and the cooking adjustment requires confirmation."),
-      l("OpenCV y NumPy calculan áreas y descriptores por pieza; PCA alinea las máscaras para construir una silueta de consenso por categoría.", "OpenCV and NumPy calculate per-piece areas and descriptors; PCA aligns masks to build a consensus silhouette per category."),
-      l("Un motor Python con perfiles JSON propone rangos de tiempo, temperaturas y programas por fases, agrupa planes compatibles y conserva los factores de cada decisión.", "A Python engine with JSON profiles proposes time ranges, temperatures and multi-stage programmes, groups compatible plans and preserves the factors behind each decision.")
+      l("La imagen se normaliza a RGB y se corrige su orientación EXIF antes de ejecutar los modelos.", "The image is normalised to RGB and its EXIF orientation corrected before the models run."),
+      l("SegFormer-B0 estima alimento, fondo y ocupación; YOLO11n detecta piezas y SAM 2.1 Hiera Tiny refina sus máscaras.", "SegFormer-B0 estimates food, background and occupancy; YOLO11n detects pieces and SAM 2.1 Hiera Tiny refines their masks."),
+      l("Los recortes por pieza se clasifican entre siete cortes de pollo con DINOv3 ConvNeXt-B; un especialista DINOv3 ViT-B/16 + SVM RBF estima el rebozado.", "Per-piece crops are classified among seven chicken cuts with DINOv3 ConvNeXt-B; a DINOv3 ViT-B/16 + RBF SVM specialist estimates breading."),
+      l("El análisis geométrico resume área, caja, centroide, elongación y solidez en píxeles; sus medidas todavía no equivalen a dimensiones físicas.", "Geometric analysis summarises area, bounding box, centroid, elongation and solidity in pixels; these measurements are not yet physical dimensions."),
+      l("El motor de reglas combina predicciones y perfiles JSON para proponer tiempos, temperaturas y fases cuando están configuradas.", "The rule engine combines predictions and JSON profiles to propose times, temperatures and stages when configured.")
     ],
     validation: l(
-      "Evalué los módulos con sus propios conjuntos: el clasificador obtuvo un 91,71 % de exactitud en 603 imágenes de test; SegFormer alcanzó un 92,82 % de IoU en casos positivos dentro de una comparación de 114 fotografías. YOLO11n + SAM obtuvo un F1 de detección de 0,920 en un test histórico de 115 fotos. Estas cifras miden tareas distintas, no la calidad del cocinado final. La documentación del 29 de octubre de 2026 registra 16 pruebas automáticas de integridad y reglas, además de comprobaciones de contratos e integración. La siguiente validación requiere sesiones nuevas de cámara y ensayos térmicos en el aparato.",
-      "I evaluated each module on its own datasets: the classifier achieved 91.71% accuracy on 603 test images; SegFormer reached 92.82% IoU on positive cases within a 114-photograph comparison. YOLO11n + SAM achieved a detection F1 of 0.920 on a historical test of 115 photographs. These figures measure different tasks, rather than final cooking quality. Documentation dated 29 October 2026 records 16 automated integrity and rule tests, alongside contract and integration checks. The next validation requires new camera sessions and thermal trials on the appliance."
+      "Los estudios de cada módulo usan conjuntos y particiones distintos. SegFormer-B0 obtuvo 92,82 % de IoU y 1,01 puntos porcentuales de error medio en cobertura en una comparación de 114 imágenes; YOLO26n semántico alcanzó 90,63 % y 1,55 puntos. YOLO11n + SAM logró en validación (114 fotos, 2.036 piezas) MAE de conteo 0,956, 61,4 % de conteos exactos y AP de máscaras 0,825. En el test histórico de 115 fotos obtuvo MAE 1,009 y AP 0,816; ese test no cambió la selección. ConvNeXt-B obtuvo 92,40 % de exactitud y macro-F1 92,17 % en validación y 91,71 % de exactitud en el test documentado. Su umbral operativo es 0,90; el rechazo estadístico no certificó el objetivo de precisión del 95 %. El especialista de rebozado obtuvo 96,20 % de balanced accuracy, 89,35 % de precisión y 93,79 % de recall en un test agrupado de 1.449 imágenes, por lo que requiere confirmación humana. Estas métricas describen tareas distintas, no el resultado del cocinado.",
+      "The module studies use different datasets and splits. SegFormer-B0 achieved 92.82% IoU and 1.01 percentage points of mean coverage error in a 114-image comparison; semantic YOLO26n reached 90.63% and 1.55 points. YOLO11n + SAM achieved a count MAE of 0.956, 61.4% exact counts and mask AP of 0.825 on validation (114 photos, 2,036 pieces). On the historical test of 115 photos it scored MAE 1.009 and AP 0.816; that test did not change the selection. ConvNeXt-B achieved 92.40% accuracy and 92.17% macro-F1 on validation, and 91.71% accuracy on the documented test. Its operational threshold is 0.90; statistical rejection did not certify the 95% precision target. The breading specialist achieved 96.20% balanced accuracy, 89.35% precision and 93.79% recall on a grouped test of 1,449 images, so it requires human confirmation. These metrics describe different tasks, not cooking outcomes."
     ),
     learning: l(
-      "La potencia del proyecto está en conectar disciplinas: una buena clasificación aislada no resuelve la geometría, la incertidumbre ni la planificación. Diseñar contratos por pieza, controlar la propagación de errores y distinguir una medición visual de una magnitud física resultó tan importante como entrenar las redes.",
-      "The project's strength lies in connecting disciplines: good standalone classification does not solve geometry, uncertainty or planning. Designing per-piece contracts, controlling error propagation and distinguishing a visual measurement from a physical quantity proved as important as training the networks."
+      "La calidad de los datos depende de controlar duplicados y procedencia entre particiones; el flujo usa hashes exactos y perceptuales y revisa conflictos de etiquetas. También es esencial separar las máscaras globales de las instancias cuando las piezas se tocan, conservar la incertidumbre y distinguir los píxeles de medidas físicas. La cámara calibrada y los ensayos térmicos en un aparato concreto siguen siendo necesarios antes de validar recomendaciones de cocinado.",
+      "Data quality depends on controlling duplicates and provenance across splits; the workflow uses exact and perceptual hashes and reviews label conflicts. It is also essential to separate global masks from instances when pieces touch, preserve uncertainty and distinguish pixels from physical measurements. A calibrated camera and thermal trials on a specific appliance are still needed before cooking recommendations can be validated."
     ),
     scope: l(
-      "Prototipo funcional de investigación, con siete cortes de pollo y un especialista de rebozado integrados. Su ambición es ampliar el reconocimiento y adaptar los perfiles a distintos alimentos y aparatos. Los planes actuales requieren revisión humana; la calibración de cámara, los ensayos térmicos y el control físico del airfryer son pasos posteriores.",
-      "A functional research prototype with seven chicken cuts and an integrated breading specialist. Its ambition is to expand recognition and adapt profiles to different foods and appliances. Current plans require human review; camera calibration, thermal trials and physical airfryer control are subsequent steps."
+      "V2 ejecuta un pipeline desde una imagen hasta un plan provisional trazable. El clasificador cubre siete cortes de pollo y el especialista de rebozado requiere confirmación. La cámara aún no está calibrada para convertir píxeles en medidas físicas y cada propuesta necesita revisión humana. La ampliación a más alimentos y aparatos depende de nuevas sesiones de cámara y ensayos térmicos.",
+      "V2 runs a traceable pipeline from an image to a provisional plan. The classifier covers seven chicken cuts and the breading specialist requires confirmation. The camera is not yet calibrated to convert pixels into physical measurements, and every proposal needs human review. Expanding to more foods and appliances depends on new camera sessions and thermal trials."
     ),
+    documentationSections: [
+      {
+        heading: l("1. Resumen del proyecto", "1. Project overview"),
+        body: l([
+          "He desarrollado un prototipo que analiza una fotografía de los alimentos en la cesta de una airfryer. Localiza las piezas, propone su categoría y algunos atributos visibles y, con esa información, prepara un plan de cocinado que una persona puede revisar. Está concebido como punto de partida para fabricantes de electrodomésticos y equipos de producto interesados en explorar una experiencia asistida por cámara.",
+          "La solución integra visión artificial, geometría y reglas de cocinado en un pipeline trazable. Cada módulo puede evaluarse y sustituirse de forma independiente, lo que permite evolucionar el sistema sin perder de vista cómo se obtiene cada resultado."
+        ].join("\n\n"), [
+          "I developed a prototype that analyses a photograph of the food in an airfryer basket. It locates the pieces, suggests their category and some visible attributes, and uses that information to prepare a cooking plan for a person to review. It is intended as a starting point for appliance manufacturers and product teams exploring a camera-assisted cooking experience.",
+          "The solution brings together computer vision, geometry and cooking rules in a traceable pipeline. Each module can be evaluated and replaced independently, making it possible to evolve the system while keeping track of how each result is produced."
+        ].join("\n\n"))
+      },
+      {
+        heading: l("2. Problema y objetivos", "2. Problem and objectives"),
+        body: l([
+          "Elegir un programa para la airfryer implica considerar el tipo de alimento, el tamaño de las piezas y su preparación, además de ajustar tiempo y temperatura. Una receta fija no representa bien una cesta con alimentos distintos. La imagen aporta información sobre lo que contiene, pero no revela con precisión el grosor ni confirma que el interior esté cocinado.",
+          "El objetivo fue crear una prueba de concepto que conectase esas decisiones en un proceso reproducible: estimar la superficie ocupada, separar piezas, clasificarlas, extraer medidas visibles y generar una propuesta explicable. La primera versión operativa se limitó a siete cortes de pollo e incorporó un clasificador especializado en rebozado. La arquitectura permite ampliar el dominio cuando haya datos y validación suficientes."
+        ].join("\n\n"), [
+          "Choosing an airfryer programme involves considering the food type, piece size and preparation, as well as adjusting time and temperature. A fixed recipe does not represent a basket of different foods well. An image provides information about what is in the basket, but it cannot reveal thickness precisely or confirm that the inside is cooked.",
+          "The goal was to build a proof of concept that connects these decisions in a reproducible process: estimate occupied surface area, separate pieces, classify them, extract visible measurements and generate an explainable proposal. The first operational version was limited to seven chicken cuts and included a specialist breading classifier. The architecture can expand to a broader domain when enough data and validation are available."
+        ].join("\n\n"))
+      },
+      {
+        heading: l("3. Solución y arquitectura", "3. Solution and architecture"),
+        body: l([
+          "El proceso parte de una imagen. El orquestador corrige su orientación, coordina los modelos mediante adaptadores y guarda resultados intermedios, logs e informes de cada ejecución. Los módulos intercambian máscaras e información estructurada vinculadas a un identificador estable por pieza.",
+          [
+            "```mermaid",
+            '%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif", "fontSize": "14px", "primaryTextColor": "#17324d", "lineColor": "#718096", "clusterBkg": "#f5f8fb", "clusterBorder": "#c9d6e2", "edgeLabelBackground": "#ffffff"}, "flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 46, "htmlLabels": true}}}%%',
+            "flowchart LR",
+            "    A([Foto de la cesta]) --> B[Normalización RGB<br/>y orientación EXIF]",
+            "",
+            "    subgraph vision[Visión y separación]",
+            "        direction LR",
+            "        C[SegFormer-B0<br/>alimento, fondo y ocupación]",
+            "        D[YOLO11n 512<br/>detección de piezas]",
+            "        E[SAM 2.1 Hiera Tiny<br/>refinamiento de máscaras]",
+            "        F[Recortes por pieza<br/>e identificadores]",
+            "        C -. control de ocupación .-> K[Control de ocupación<br/>y máscaras]",
+            "        D --> E --> F",
+            "    end",
+            "",
+            "    B --> C",
+            "    B --> D",
+            "",
+            "    subgraph analysis[Análisis por pieza]",
+            "        direction TB",
+            "        G[DINOv3 ConvNeXt-B<br/>7 cortes de pollo]",
+            "        H[DINOv3 ViT-B/16 + SVM RBF<br/>atributo de rebozado]",
+            "        I[Geometría por pieza<br/>área, caja y forma]",
+            "    end",
+            "",
+            "    F --> G",
+            "    F --> H",
+            "    E --> I",
+            "",
+            "    subgraph planning[Planificación y revisión]",
+            "        direction LR",
+            "        J[Motor de reglas<br/>y perfiles JSON]",
+            "        L[Plan provisional<br/>por pieza y por tanda]",
+            "        M([Revisión humana<br/>y termómetro])",
+            "        J --> L --> M",
+            "    end",
+            "",
+            "    G --> J",
+            "    H --> J",
+            "    I --> J",
+            "    K --> J",
+            "",
+            "    classDef input fill:#e8f1fb,stroke:#4b78a8,color:#17324d,stroke-width:1.5px;",
+            "    classDef visionNode fill:#e8f6f3,stroke:#459487,color:#17324d,stroke-width:1.5px;",
+            "    classDef analysisNode fill:#f2edfb,stroke:#8065ad,color:#2c2340,stroke-width:1.5px;",
+            "    classDef planningNode fill:#fff3df,stroke:#c48a35,color:#493316,stroke-width:1.5px;",
+            "    class A,B input;",
+            "    class C,D,E,F,K visionNode;",
+            "    class G,H,I analysisNode;",
+            "    class J,L,M planningNode;",
+            "    style vision fill:#f3faf8,stroke:#b7d9d1,stroke-width:1px",
+            "    style analysis fill:#f8f5fc,stroke:#d2c5e6,stroke-width:1px",
+            "    style planning fill:#fffbf3,stroke:#ead5ad,stroke-width:1px",
+            "```"
+          ].join("\n"),
+          "La ejecución genera máscaras, predicciones por identificador, medidas en píxeles, una propuesta de tiempo y temperatura y las advertencias correspondientes. `pipeline.json` define las etapas, sus adaptadores y entornos. Desarrollo conserva el entrenamiento, la selección y el historial. Los experimentos y alternativas que no forman parte de la selección activa aportan evidencia técnica, pero no se ejecutan en el runtime."
+        ].join("\n\n"), [
+          "The process starts with an image. The orchestrator corrects its orientation, coordinates the models through adapters, and saves intermediate results, logs and a report for each run. The modules exchange masks and structured information linked by a stable identifier for each piece.",
+          [
+            "```mermaid",
+            '%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif", "fontSize": "14px", "primaryTextColor": "#17324d", "lineColor": "#718096", "clusterBkg": "#f5f8fb", "clusterBorder": "#c9d6e2", "edgeLabelBackground": "#ffffff"}, "flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 46, "htmlLabels": true}}}%%',
+            "flowchart LR",
+            "    A([Basket photo]) --> B[RGB normalisation<br/>and EXIF orientation]",
+            "",
+            "    subgraph vision[Vision and separation]",
+            "        direction LR",
+            "        C[SegFormer-B0<br/>food, background and occupancy]",
+            "        D[YOLO11n 512<br/>piece detection]",
+            "        E[SAM 2.1 Hiera Tiny<br/>mask refinement]",
+            "        F[Per-piece crops<br/>and identifiers]",
+            "        C -. occupancy control .-> K[Occupancy and mask<br/>checks]",
+            "        D --> E --> F",
+            "    end",
+            "",
+            "    B --> C",
+            "    B --> D",
+            "",
+            "    subgraph analysis[Per-piece analysis]",
+            "        direction TB",
+            "        G[DINOv3 ConvNeXt-B<br/>7 chicken cuts]",
+            "        H[DINOv3 ViT-B/16 + RBF SVM<br/>breading attribute]",
+            "        I[Per-piece geometry<br/>area, box and shape]",
+            "    end",
+            "",
+            "    F --> G",
+            "    F --> H",
+            "    E --> I",
+            "",
+            "    subgraph planning[Planning and review]",
+            "        direction LR",
+            "        J[Rule engine<br/>and JSON profiles]",
+            "        L[Provisional plan<br/>by piece and batch]",
+            "        M([Human review<br/>and thermometer])",
+            "        J --> L --> M",
+            "    end",
+            "",
+            "    G --> J",
+            "    H --> J",
+            "    I --> J",
+            "    K --> J",
+            "",
+            "    classDef input fill:#e8f1fb,stroke:#4b78a8,color:#17324d,stroke-width:1.5px;",
+            "    classDef visionNode fill:#e8f6f3,stroke:#459487,color:#17324d,stroke-width:1.5px;",
+            "    classDef analysisNode fill:#f2edfb,stroke:#8065ad,color:#2c2340,stroke-width:1.5px;",
+            "    classDef planningNode fill:#fff3df,stroke:#c48a35,color:#493316,stroke-width:1.5px;",
+            "    class A,B input;",
+            "    class C,D,E,F,K visionNode;",
+            "    class G,H,I analysisNode;",
+            "    class J,L,M planningNode;",
+            "    style vision fill:#f3faf8,stroke:#b7d9d1,stroke-width:1px",
+            "    style analysis fill:#f8f5fc,stroke:#d2c5e6,stroke-width:1px",
+            "    style planning fill:#fffbf3,stroke:#ead5ad,stroke-width:1px",
+            "```"
+          ].join("\n"),
+          "The run generates masks, per-identifier predictions, measurements in pixels, a proposed time and temperature, and relevant warnings. `pipeline.json` defines the stages, adapters and environments. Development retains the training, selection and history. Experiments and alternatives outside the active selection provide technical evidence but do not run in the runtime."
+        ].join("\n\n"))
+      },
+      {
+        heading: l("4. Desarrollo y decisiones técnicas", "4. Development and technical decisions"),
+        body: l([
+          "El pipeline asigna a cada modelo una tarea concreta, en lugar de pedir a una sola red que resuelva problemas distintos.",
+          "Los datos de desarrollo reúnen fotografías de cestas reales e imágenes recopiladas para ampliar la variedad. Cada tarea tiene etiquetas y particiones propias. El estudio de instancias reunió 1.255 fotos: 1.023 de entrenamiento, 114 de validación, 115 de test histórico y tres capturas continuas fuera del conteo. Las herramientas de adquisición, anotación y limpieza apoyan la experimentación, pero no intervienen en la inferencia de una cesta.",
+          [
+            "- **Alimento y fondo — SegFormer-B0.** Genera una máscara semántica global y estima la ocupación. En una comparación de 114 imágenes obtuvo 92,82 % de IoU y 1,01 puntos porcentuales de error medio en cobertura. Superó en esas métricas a YOLO26n semántico (90,63 % de IoU y 1,55 puntos de error), por lo que se mantuvo como modelo seleccionado.",
+            "- **Separación de piezas — YOLO11n 512 + SAM 2.1 Hiera Tiny.** YOLO propone una máscara para cada pieza y SAM refina sus contornos. La selección se basó en un criterio fijado sobre validación que combina el error de conteo con umbrales mínimos de calidad. En 114 fotos de validación (2.036 piezas), obtuvo un MAE de conteo de 0,956, un 61,4 % de conteos exactos y un AP de máscaras de 0,825. En el test histórico de 115 fotos, el MAE fue 1,009 y el AP 0,816. El test no se utilizó para cambiar la selección.",
+            "- **Clasificación de cortes — DINOv3 ConvNeXt-B ajustado.** Procesa cada recorte a 256 × 256 y una cabeza lineal predice una de siete clases. La validación registrada obtuvo un 92,40 % de exactitud y un macro-F1 de 92,17 %; la evaluación de test documentada obtuvo un 91,71 % de exactitud. El sistema asigna una clase operativa a partir de 0,90 de confianza. Como el mecanismo estadístico de rechazo no certificó el objetivo de precisión del 95 %, algunas piezas pueden quedar pendientes de revisión.",
+            "- **Atributo de rebozado — DINOv3 ViT-B/16 + SVM RBF.** El encoder genera características que clasifica un SVM calibrado mediante regresión logística. En un test agrupado de 1.449 imágenes alcanzó un 96,20 % de balanced accuracy, un 89,35 % de precisión y un 93,79 % de recall para “Rebozado”. La precisión medida y la diferencia entre las imágenes de entrenamiento y los recortes de cámara hacen que el resultado requiera confirmación humana antes de modificar el plan.",
+            "- **Geometría y cocinado.** El resumen calcula área, caja, centroide, elongación y solidez en píxeles; también puede proponer consensos de forma provisionales. El planificador es un componente determinista en Python con perfiles JSON, no un modelo entrenado. Ajusta rangos de tiempo a partir de los parámetros disponibles y devuelve acciones y fases de temperatura cuando están configuradas."
+          ].join("\n"),
+          "También se probaron otras familias y configuraciones, entre ellas YOLO semántico, variantes de segmentación de instancias y clasificadores ViT con cabezas lineales o métodos clásicos. Las comparaciones permitieron elegir un componente adecuado para cada tarea. En clasificación, ConvNeXt obtuvo el mejor resultado puntual de validación frente a las variantes ViT ensayadas. En instancias, la combinación seleccionada cumplió los umbrales de conteo y máscara fijados de antemano. Los resultados completos y las recetas permanecen en los módulos de Desarrollo."
+        ].join("\n\n"), [
+          "The pipeline assigns a specific task to each model instead of asking one network to solve different problems.",
+          "Development data combines photographs of real baskets with images gathered to increase variety. Each task has its own labels and splits. The instance study brought together 1,255 photos: 1,023 for training, 114 for validation, 115 in a historical test and three continuous captures outside the count. Acquisition, annotation and cleaning tools support experimentation but do not run during basket inference.",
+          [
+            "- **Food and background — SegFormer-B0.** It produces a global semantic mask and estimates occupancy. In a 114-image comparison it achieved 92.82% IoU and 1.01 percentage points of mean coverage error. It outperformed semantic YOLO26n on those metrics (90.63% IoU and 1.55 error points), so it remained the selected model.",
+            "- **Piece separation — YOLO11n 512 + SAM 2.1 Hiera Tiny.** YOLO proposes a mask for each piece and SAM refines its contours. Selection used a validation criterion combining count error with minimum quality thresholds. On 114 validation photos (2,036 pieces), it achieved a count MAE of 0.956, 61.4% exact counts and mask AP of 0.825. On the historical test of 115 photos, MAE was 1.009 and AP was 0.816. The test was not used to change the selection.",
+            "- **Cut classification — fine-tuned DINOv3 ConvNeXt-B.** It processes each crop at 256 × 256 and a linear head predicts one of seven classes. Recorded validation achieved 92.40% accuracy and 92.17% macro-F1; the documented test evaluation achieved 91.71% accuracy. The system assigns an operational class from 0.90 confidence. Because the statistical rejection mechanism did not certify the 95% precision target, some pieces may be left for review.",
+            "- **Breading attribute — DINOv3 ViT-B/16 + RBF SVM.** The encoder generates features classified by an SVM calibrated with logistic regression. On a grouped test of 1,449 images it achieved 96.20% balanced accuracy, 89.35% precision and 93.79% recall for “Breaded”. The measured precision and the difference between training images and camera crops mean the result requires human confirmation before changing the plan.",
+            "- **Geometry and cooking.** The summary calculates area, bounding box, centroid, elongation and solidity in pixels; it can also produce provisional shape consensus. The planner is a deterministic Python component with JSON profiles, not a trained model. It adjusts time ranges from available parameters and returns actions and temperature stages when configured."
+          ].join("\n"),
+          "Other model families and configurations were also explored, including semantic YOLO, instance segmentation variants and ViT classifiers with linear heads or classical methods. The comparisons helped select a suitable component for each task. For classification, ConvNeXt achieved the best single validation result against the ViT variants tested. For instances, the selected combination met the pre-set count and mask thresholds. Full results and recipes remain in the Development modules."
+        ].join("\n\n"))
+      },
+      {
+        heading: l("5. Retos y soluciones", "5. Challenges and solutions"),
+        body: l([
+          "Uno de los principales retos fue evitar que la calidad de las particiones inflase las métricas. Las copias exactas o las imágenes casi idénticas distribuidas entre conjuntos pueden dar una impresión demasiado optimista del rendimiento. El proceso de preparación utiliza hashes exactos y perceptuales, agrupación por procedencia y revisión de conflictos de etiquetas para reducir ese riesgo. Las particiones y las métricas se mantienen específicas para cada tarea.",
+          "En algunas imágenes las piezas están muy próximas o se solapan. Mantener separadas la máscara global del alimento y la segmentación por instancia permite evaluar cada problema por su cuenta. SAM refina las propuestas de YOLO y las máscaras exportadas conservan identificadores únicos. La máscara semántica se utiliza como control; todavía no se ha validado su uso para recortar automáticamente las instancias.",
+          "También era necesario preservar la integridad de los checkpoints, las dependencias y las salidas. V2 separa los entornos de inferencia, configura cada etapa explícitamente y comprueba hashes y contratos de datos. Si falta memoria GPU, el modo automático puede recurrir a CPU. En el análisis de instancias, la ejecución en CPU omite SAM y se registra como una variante distinta del método seleccionado."
+        ].join("\n\n"), [
+          "One of the main challenges was preventing split quality from inflating the metrics. Exact duplicates or near-identical images spread across sets can make performance look too optimistic. Preparation uses exact and perceptual hashes, grouping by provenance and label-conflict review to reduce that risk. Splits and metrics remain specific to each task.",
+          "In some images, pieces are very close together or overlap. Keeping the global food mask separate from instance segmentation makes it possible to evaluate each problem independently. SAM refines YOLO proposals and exported masks retain unique identifiers. The semantic mask serves as a control; using it to crop instances automatically has not yet been validated.",
+          "The integrity of checkpoints, dependencies and outputs also had to be preserved. V2 separates inference environments, configures every stage explicitly and checks hashes and data contracts. If GPU memory is unavailable, automatic mode can fall back to CPU. For instance analysis, CPU execution omits SAM and is recorded as a different variant from the selected method."
+        ].join("\n\n"))
+      },
+      {
+        heading: l("6. Evaluación y resultados", "6. Evaluation and results"),
+        body: l([
+          "La evaluación combina métricas específicas de cada tarea con comprobaciones de integración. IoU y Dice miden el solapamiento de máscaras; AP y F1 evalúan la detección de instancias; MAE y la tasa de conteo exacto describen el recuento; exactitud, macro-F1 y balanced accuracy resumen la clasificación. Una prueba de humo comprueba la carga de artefactos, la ejecución y la correspondencia de identificadores en todo el pipeline, pero no mide la calidad predictiva.",
+          "V2 puede completar un recorrido desde la máscara de alimento hasta el plan JSON: genera instancias, clasificación, análisis de rebozado y geometría. En un ejemplo guardado, la ejecución terminó con siete piezas y registró tres advertencias: las clases no superaron el umbral operativo, el encuadre no estaba calibrado a cm² y la propuesta de cocinado requería revisión. El ejemplo muestra por qué conviene registrar la incertidumbre y la procedencia junto a cada predicción.",
+          "Las cifras de los modelos proceden de conjuntos y particiones diferentes; no constituyen una puntuación global ni garantizan el rendimiento en una cámara o airfryer comercial. En particular, el resultado de rebozado sigue sujeto a revisión y el test de instancias es histórico, no una evaluación independiente por sesión."
+        ].join("\n\n"), [
+          "Evaluation combines task-specific metrics with integration checks. IoU and Dice measure mask overlap; AP and F1 evaluate instance detection; MAE and exact-count rate describe counting; accuracy, macro-F1 and balanced accuracy summarise classification. A smoke test checks artifact loading, execution and identifier correspondence throughout the pipeline, but does not measure predictive quality.",
+          "V2 can complete a run from the food mask to a JSON plan: it produces instances, classification, breading analysis and geometry. In a saved example, the run finished with seven pieces and recorded three warnings: classes did not exceed the operational threshold, the frame was not calibrated to cm², and the cooking proposal needed review. The example shows why uncertainty and provenance should be recorded alongside each prediction.",
+          "Model figures come from different datasets and splits; they are not a single overall score and do not guarantee performance with a commercial camera or airfryer. In particular, the breading result remains under review and the instance test is historical, not an independent per-session evaluation."
+        ].join("\n\n"))
+      },
+      {
+        heading: l("7. Estado actual y futuras mejoras", "7. Current status and future improvements"),
+        body: l([
+          "**Estado actual:** V2 ejecuta el recorrido desde una imagen hasta un plan provisional. Cuenta con configuración centralizada, modelos seleccionados, resultados trazables y pruebas estructurales y de humo documentadas. El clasificador principal cubre siete cortes de pollo; las medidas físicas necesitan calibración y el planificador requiere revisión humana.",
+          "**Siguientes pasos:** validar el sistema con recortes de una cámara real y sesiones independientes; ampliar y equilibrar alimentos y preparaciones; calibrar la cámara para convertir píxeles en medidas físicas; recopilar ensayos de tiempo, peso, grosor y temperatura interna en un aparato concreto; recalibrar los perfiles y umbrales con esos datos; y medir el rendimiento y la latencia en el hardware objetivo. La ampliación y profesionalizacion del proyecto sigue en constante desarrollo.",
+        ].join("\n\n"), [
+          "**Current status:** V2 runs the workflow from an image to a provisional plan. It has central configuration, selected models, traceable outputs, and documented structural and smoke tests. The main classifier covers seven chicken cuts; physical measurements need calibration and the planner requires human review.",
+          "**Next steps:** validate the system on crops from a real camera and independent sessions; expand and balance foods and preparations; calibrate the camera to convert pixels into physical measurements; collect trials for time, weight, thickness and internal temperature on a specific appliance; recalibrate profiles and thresholds with those data; and measure performance and latency on the target hardware. The project’s expansion and professionalisation are ongoing.",
+        ].join("\n\n"))
+      }
+    ],
     technologies: ["Python", "PyTorch", "DINOv3", "YOLO11n", "SAM 2.1", "SegFormer", "OpenCV", "scikit-learn"],
     metrics: [
       { value: "7", label: l("cortes de pollo integrados", "integrated chicken cuts"), evidence: "Airfryer V2 · configuración operativa" },
@@ -211,6 +419,7 @@ export const projects: Project[] = [
   },
   {
     slug: "twinphoto",
+    documentationSections: twinphotoDocumentationSections,
     order: 3,
     featured: true,
     year: "2026",
@@ -270,6 +479,7 @@ export const projects: Project[] = [
   },
   {
     slug: "bitcoin-sentiment",
+    documentationSections: bitcoinDocumentationSections,
     order: 4,
     featured: true,
     year: "2026",
@@ -329,6 +539,7 @@ export const projects: Project[] = [
   },
   {
     slug: "asistente-profesional",
+    documentationSections: assistantDocumentationSections,
     order: 5,
     featured: true,
     year: "2026",

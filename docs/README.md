@@ -6,6 +6,8 @@ This is the low-token entry point for future Codex sessions. Read this page, sel
 | --- | --- | --- |
 | Understand boundaries or make a cross-cutting change | [`architecture.md`](architecture.md) | [`codebase-map.md`](codebase-map.md) and affected scoped `AGENTS.md` files |
 | Change layout, motion or accessibility | [`UI_SYSTEM.md`](UI_SYSTEM.md) | `apps/web/AGENTS.md`, the target route/component and matching CSS ranges |
+| Create documentation from a project folder (Markdown draft for review) | [`Creacion_Documentacion.md`](../Creacion_Documentacion.md) | Only the supplied project's relevant sources; delegate to the independent Luna agent specified there |
+| Implement or update a project's documentation | [`Implementacion_Documentacion.md`](../Implementacion_Documentacion.md) | Only the target project's content and the rendering/test files listed in that guide |
 | Edit biography, projects or claims | [`CONTENT_AND_CLAIMS.md`](CONTENT_AND_CLAIMS.md) | `packages/content/AGENTS.md` and targeted content/type ranges |
 | Change chat behaviour or security | `services/chat-api/AGENTS.md` | [`security-chat.md`](security-chat.md), [`architecture.md`](architecture.md), contract tests and the affected Python module |
 | Configure Sanity or shared content | [`architecture.md`](architecture.md) | Studio schema, content repository and shared types |
